@@ -42,11 +42,6 @@ const typeDefs = gql`
    created: Date
   }
   type Query {
-   getBook:Book
-
-    myTaskLists: [TaskList!]!
-    getTaskList(id: ID!): TaskList
-    countTaskList:Int!
     getUser:User!
     getCars:[Vehicule]
     getPrevGastos(id:ID):[Gasto]
@@ -62,13 +57,6 @@ const typeDefs = gql`
     updateGasto(input:CreateGastoInput!):Gasto
     signUp(input: SignUpInput!): AuthUser
     signIn(input: SignInInput!): AuthUser
-    createTaskList(title: String!): TaskList!
-    updateTaskList(id: ID!, title: String!): TaskList!
-    deleteTaskList(id: ID!): Boolean!
-    addUserToTaskList(taskListId: ID!, userId: ID!): TaskList
-    createToDo(content: String!, taskListId: ID!): ToDo!
-    updateToDo(id: ID!, content: String, isCompleted: Boolean): ToDo!
-    deleteToDo(id: ID!): Boolean!
 
   }
   input SignUpInput {
@@ -97,9 +85,7 @@ const typeDefs = gql`
     id:ID
     fecha:Date
   }
-  type Book{
-    title:String
-  }
+
   input CreateVehiculeInput{
     tipo:String
     referencia:String
@@ -141,40 +127,15 @@ const typeDefs = gql`
     id:ID
     gastos:[ID]
   }
-  type TaskList {
-    id: ID!
-    createdAt: String!
-    title: String!
-    progress: Float!
-    users: [User]!
-    todos: [ToDo!]!
-  }
-  type ToDo {
-    id: ID!
-    content: String!
-    isCompleted: Boolean!
-    taskList: TaskList!
-  }
+
 `;
 const resolvers = {
     Query: {
-      getBook:(_,__,db)=>{
-
-        return books
-        // return{
-        //   users
-        // }
-      } ,
+      
       getAllUsers:async (_, __, { db, }) => {
         return await db.collection('User').find({}).toArray()
       },
-      myTaskLists: async (_, __, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-  
-        return await db.collection('TaskList')
-                                  .find({ userIds: user._id })
-                                  .toArray();
-      },
+    
       getCars:async(_, __, { db, user }) =>{
         const cars = await db.collection('Vehicule').find({ user: ObjectId(user._id)}).toArray()
 
@@ -196,14 +157,7 @@ const resolvers = {
       getOneUser:async(_, { id }, { db }) =>{
         return await db.collection('User').findOne({ _id: ObjectId(id) });
       },
-      getTaskList: async(_, { id }, { db, user }) => {
-        // if (!user) { throw new Error('Authentication Error. Please sign in'); }
-        
-        return await db.collection('TaskList').findOne({ _id: ObjectId(id) });
-      },
-      countTaskList:async(_,__,{db})=>{
-        return await db.collection('User').count()
-      },
+     
       getUser:async(_,__, { user}) => {
         return user
       }
@@ -291,87 +245,7 @@ const resolvers = {
         }
       },
   
-      createTaskList: async(_, { title }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-  
-        const newTaskList = {
-          title,
-          createdAt: new Date().toISOString(),
-          userIds: [user._id]
-        }
-         const result = await db.collection('TaskList').insertOne(newTaskList);
-        return newTaskList;
-      },
-  
-      updateTaskList: async(_, { id, title }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-  
-        const result = await db.collection('TaskList')
-                              .updateOne({
-                                _id: ObjectId(id)
-                              }, {
-                                $set: {
-                                  title
-                                }
-                              })
-        
-        return await db.collection('TaskList').findOne({ _id: ObjectId(id) });
-      },
-  
-      addUserToTaskList: async(_, { taskListId, userId }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-  
-        const taskList = await db.collection('TaskList').findOne({ _id: ObjectId(taskListId) });
-        if (!taskList) {
-          return null;
-        }
-        if (taskList.userIds.find((dbId) => dbId.toString() === userId.toString())) {
-          return taskList;
-        }
-        await db.collection('TaskList')
-                .updateOne({
-                  _id: ObjectId(taskListId)
-                }, {
-                  $push: {
-                    userIds: ObjectId(userId),
-                  }
-                })
-        taskList.userIds.push(ObjectId(userId))
-        return taskList;
-      },
-  
-      deleteTaskList: async(_, { id }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-        
-        // TODO only collaborators of this task list should be able to delete
-        await db.collection('TaskList').removeOne({ _id: ObjectId(id) });
-  
-        return true;
-      },
-  
-      // ToDo Items
-      createToDo: async(_, { content, taskListId }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-        const newToDo = {
-          content, 
-          taskListId: ObjectId(taskListId),
-          isCompleted: false,
-        }
-        const result = await db.collection('ToDo').insertOne(newToDo);
-        return result.ops[0];
-      },
-  
-      updateToDo: async(_, data, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-  
-        const result = await db.collection('ToDo')
-                              .updateOne({
-                                _id: ObjectId(data.id)
-                              }, {
-                                $set: data
-                              })
-        return await db.collection('ToDo').findOne({ _id: ObjectId(data.id) });
-      },
+     
       updateCar:async(_, data, {db, user})=>{
         if (!user) { throw new Error('Authentication Error. Please sign in'); }
         const {input} = data
@@ -403,14 +277,7 @@ const resolvers = {
       return result.value
       },
       
-      deleteToDo: async(_, { id }, { db, user }) => {
-        if (!user) { throw new Error('Authentication Error. Please sign in'); }
-        
-        // TODO only collaborators of this task list should be able to delete
-        await db.collection('ToDo').removeOne({ _id: ObjectId(id) });
-  
-        return true;
-      },
+      
     },
   
     User: {
@@ -426,34 +293,6 @@ const resolvers = {
       id: ({ _id, id }) => _id || id,
     },
   
-    TaskList: {
-      id: ({ _id, id }) => _id || id,
-      progress: async ({ _id }, _, { db })  => {
-        const todos = await db.collection('ToDo').find({ taskListId: ObjectId(_id)}).toArray()
-        const completed = todos.filter(todo => todo.isCompleted);
-  
-        if (todos.length === 0) {
-          return 0;
-        }
-  
-        return 100 * completed.length / todos.length
-      },
-      users: async ({ userIds }, _, { db }) => Promise.all(
-        userIds.map((userId) => (
-          db.collection('User').findOne({ _id: userId}))
-        )
-      ),
-      todos: async ({ _id }, _, { db }) => (
-        await db.collection('ToDo').find({ taskListId: ObjectId(_id)}).toArray()
-      ), 
-    },
-  
-    ToDo: {
-      id: ({ _id, id }) => _id || id,
-      taskList: async ({ taskListId }, _, { db }) => (
-        await db.collection('TaskList').findOne({ _id: ObjectId(taskListId) })
-      )
-    },
   
   };
 
@@ -473,34 +312,27 @@ const start= async()=>{
           Date: dateScalar,
         },
         
-        context: async ({ req }) => {
-          console.log('req',req.headers.authorization);
+        context: 
+        // async ({ req }) => {
+        //   console.log('req',req.headers.authorization);
+        //   const user = await getUserFromToken(req.headers.authorization, db);
+        //   console.log('userrrr',user);
+        //   return {
+        //     db,
+        //     user,
+        //   }
+        // },
+        async ({ req }) => {
           const user = await getUserFromToken(req.headers.authorization, db);
-          console.log('userrrr',user);
           return {
             db,
             user,
           }
         },
-        // async ({ req }) => {
-        //   if(req.headers.authorization){
-        //     const user = await getUserFromToken(req.headers.authorization, db);
-        //     console.log('userrr', user);
-        //     return {
-        //       db,
-        //     user
-        //     }
-        //   }else{
-        //     return {
-        //       db,
-        //     }
-        //   }
-         
-        // },
       });
 
-    server.listen().then(({url})=>{
-        console.log(`Server ready at ${url}`)
+    server.listen(8080).then(({url})=>{
+        console.log(`Server ready at ${8080}`)
     })
 }
 
