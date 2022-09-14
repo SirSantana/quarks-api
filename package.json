@@ -16,9 +16,7 @@
     "dotenv": "16.0.1",
     "graphql": "16.6.0",
     "jsonwebtoken": "8.5.1",
-    "mongodb": "4.9.0"
-  },
-  "devDependencies": {
-    "nodemon": "2.0.19"
+    "mongodb": "4.9.0",
+    "nodemon": "^2.0.19"
   }
 }
