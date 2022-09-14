@@ -311,6 +311,7 @@ const start= async()=>{
           ...resolvers,
           Date: dateScalar,
         },
+        debug:true,
         
         context: 
         // async ({ req }) => {
