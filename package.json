@@ -5,20 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "build": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.10.1",
-    "bcryptjs": "^2.4.3",
-    "dotenv": "^16.0.1",
-    "graphql": "^16.6.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.9.0"
+    "apollo-server": "3.10.1",
+    "bcryptjs": "2.4.3",
+    "dotenv": "16.0.1",
+    "graphql": "16.6.0",
+    "jsonwebtoken": "8.5.1",
+    "mongodb": "4.9.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "2.0.19"
   }
 }
