@@ -499,7 +499,7 @@ const start= async()=>{
         // },
       });
 
-    server.listen().then(({url})=>{
+    server.listen(process.env.PORT).then(({url})=>{
         console.log(`Server ready at ${url}`)
     })
 }
