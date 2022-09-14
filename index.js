@@ -331,8 +331,8 @@ const start= async()=>{
         },
       });
 
-    server.listen(8080).then(({url})=>{
-        console.log(`Server ready at ${8080}`)
+    server.listen({ port: process.env.PORT || 4000 }).then(({url})=>{
+        console.log(`Server ready at ${url}`)
     })
 }
 
