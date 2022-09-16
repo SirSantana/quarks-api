@@ -297,14 +297,20 @@ const resolvers = {
   };
 
 
- 
 const start= async()=>{
     const client = new MongoClient(URL, {useNewUrlParser:true, useUnifiedTopology:true})
 
     await client.connect()
-
+    let totalIndexSize = 0;
+    let totalDataSize = 0;
     const db = client.db('quarks')
-   
+    let stats = db.stats();
+    totalIndexSize += (stats.then(res=> console.log(res.indexSize /(1024*1024*1024)) )) ;
+    totalDataSize += (stats.then(res=> console.log(res.dataSize /(1024*1024*1024)))) ;
+
+    console.log("Total index size in GB: " + totalIndexSize);
+    console.log("Total data size in GB: " + totalDataSize);
+
     const server = new ApolloServer({ 
         typeDefs, 
         resolvers: {
