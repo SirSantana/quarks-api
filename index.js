@@ -22,14 +22,14 @@ const books=[
   {title:'3'}
 
 ]
-const getToken=(user)=> jwt.sign({id:user._id}, process.env.JWT_TOKEN)
+const getToken=(user)=> jwt.sign({id:user?._id}, process.env.JWT_TOKEN)
 const getUserFromToken = async (token, db) => {
   if (!token) { return null }
   const tokenData = jwt.verify(JSON.parse(token), process.env.JWT_TOKEN)
   if (!tokenData?.id) {
     return null;
   }
-  return await db.collection('User').findOne({ _id: ObjectId(tokenData.id) });
+  return await db.collection('User').findOne({ _id: ObjectId(tokenData?.id) });
 }
 
 
