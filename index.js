@@ -55,9 +55,9 @@ const typeDefs = gql`
     updateCar(input:CreateVehiculeInput!):Vehicule
     createGasto(input:CreateGastoInput!):Gasto
     updateGasto(input:CreateGastoInput!):Gasto
+    deleteGasto(id:ID!, idVehiculo:ID!):String
     signUp(input: SignUpInput!): AuthUser
     signIn(input: SignInInput!): AuthUser
-
   }
   input SignUpInput {
     email: String!
@@ -73,7 +73,7 @@ const typeDefs = gql`
     imagen:String
     description:String
     fecha:Date
-    carro:ID
+    vehiculo:ID
     id:ID
   }
   type Gasto{
@@ -83,6 +83,7 @@ const typeDefs = gql`
     imagen:String
     description:String
     id:ID
+    vehiculo:ID
     fecha:Date
   }
 
@@ -142,11 +143,11 @@ const resolvers = {
         return cars;
       },
       getPrevGastos:async(_,{id}, {db})=>{
-       const res =  await db.collection('Gasto').find({carro:id}).sort({fecha: -1}).limit(3).toArray()
+       const res =  await db.collection('Gasto').find({vehiculo:id}).sort({fecha: -1}).limit(3).toArray()
        return res
       },
       getAllGastos:async(_,{id}, {db})=>{
-        const res =  await db.collection('Gasto').find({carro:id}).sort({fecha: -1}).limit(20).toArray()
+        const res =  await db.collection('Gasto').find({vehiculo:id}).sort({fecha: -1}).limit(20).toArray()
         return res.reverse()
        },
        getOneGasto:async(_,{id}, {db})=>{
@@ -191,9 +192,10 @@ const resolvers = {
         if(dineroGastado.length=== 0){throw new Error('Debes agregar fecha, tipo y dinero gastado'); }
           const res = await db.collection('Gasto').insertOne(input).then(result =>
           db.collection('Gasto').findOne({ _id: result.insertedId }))
+          console.log(res);
          db.collection('Vehicule')
               .updateOne({
-                _id: ObjectId(input.carro)
+                _id: ObjectId(input.vehiculo)
               }, {
                 $push: {
                   gastos: res._id,
@@ -276,7 +278,17 @@ const resolvers = {
       //  const res = await db.collection('Vehicule').findOne({ _id: ObjectId(input.id) });
       return result.value
       },
-      
+      deleteGasto:async(_, {id, idVehiculo}, {db, user})=>{
+        console.log(id, idVehiculo);
+        if (!user) { throw new Error('Authentication Error. Please sign in'); }
+        try {
+          await db.collection('Gasto').deleteOne({_id:ObjectId(id)})
+          await db.collection('Vehicule').updateOne({_id:ObjectId(idVehiculo)}, {$pull:{gastos:ObjectId(id)}})
+          return id
+        } catch (error) {
+          throw new Error('Ha ocurrido un error');
+        }
+      }
       
     },
   
