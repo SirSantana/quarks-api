@@ -58,6 +58,14 @@ const typeDefs = gql`
     deleteGasto(id:ID!, idVehiculo:ID!):String
     signUp(input: SignUpInput!): AuthUser
     signIn(input: SignInInput!): AuthUser
+    editUser(input:UserInput!):User
+  }
+  input UserInput{
+    name:String
+    apellido:String
+    avatar:String
+    ciudad:String
+    pais:String
   }
   input SignUpInput {
     email: String!
@@ -108,6 +116,7 @@ const typeDefs = gql`
   type User {
     id: ID
     name: String
+    apellido:String
     email: String
     password:String
     avatar: String
@@ -165,6 +174,20 @@ const resolvers = {
       
     },
     Mutation: {
+      editUser:async(_,{input}, {db, user})=>{
+        if (!user) { throw new Error('Authentication Error. Please sign in'); }
+        const result = await db.collection('User')
+                                .findOneAndUpdate({
+                                  _id:user._id
+                                },{
+                                  $set:input
+                                }, {
+                                  returnDocument:'after'
+                                })
+                                console.log(result);
+      return result.value
+        
+      },
       createCar:async (_, { input }, { db, user })=>{
         if (!user) { throw new Error('Authentication Error. Please sign in'); }
         const newCar = {...input, user:user._id}
