@@ -20,8 +20,8 @@ const books=[
   {title:'1'},
   {title:'2'},
   {title:'3'}
-
 ]
+
 const getToken=(user)=> jwt.sign({id:user?._id}, process.env.JWT_TOKEN)
 const getUserFromToken = async (token, db) => {
   if (!token) { return null }
@@ -49,6 +49,8 @@ const typeDefs = gql`
     getOneGasto(id:ID):Gasto
     getOneUser(id:ID!):User!
     getAllUsers:[User]!
+    getRecordatorios:[Recordatorio]!
+    getOneRecordatorio(id:ID):Recordatorio
   }
   type Mutation {
     createCar(input:CreateVehiculeInput!):Vehicule
@@ -58,7 +60,8 @@ const typeDefs = gql`
     deleteGasto(id:ID!, idVehiculo:ID!):String
     signUp(input: SignUpInput!): AuthUser
     signIn(input: SignInInput!): AuthUser
-    editUser(input:UserInput!):User
+    editUser(input:UserInput!):User!
+    createRecordatorio(input:RecordatorioInput!):Recordatorio
   }
   input UserInput{
     name:String
@@ -66,6 +69,11 @@ const typeDefs = gql`
     avatar:String
     ciudad:String
     pais:String
+  }
+  input RecordatorioInput{
+    titulo:String
+    description:String
+    fecha:Date
   }
   input SignUpInput {
     email: String!
@@ -93,6 +101,13 @@ const typeDefs = gql`
     id:ID
     vehiculo:ID
     fecha:Date
+  }
+  type Recordatorio{
+    titulo:String
+    description:String
+    fecha:Date
+    id:ID
+    user:ID
   }
 
   input CreateVehiculeInput{
@@ -125,6 +140,7 @@ const typeDefs = gql`
     status:String
     pais:String
     vehiculos:[ID]
+    recordatorio:[ID]
   }
   type Vehicule{
     tipo:String
@@ -151,6 +167,11 @@ const resolvers = {
 
         return cars;
       },
+      getRecordatorios:async(_, __, { db, user }) =>{
+        const recordatorios = await db.collection('Recordatorio').find({ user: ObjectId(user._id)}).toArray()
+
+        return recordatorios;
+      },
       getPrevGastos:async(_,{id}, {db})=>{
        const res =  await db.collection('Gasto').find({vehiculo:id}).sort({fecha: -1}).limit(3).toArray()
        return res
@@ -161,9 +182,13 @@ const resolvers = {
        },
        getOneGasto:async(_,{id}, {db})=>{
         const res =  await db.collection('Gasto').findOne({_id:ObjectId(id)})
-        console.log('res',res);
         return res
        },
+       getOneRecordatorio:async(_,{id}, {db})=>{
+        const res =  await db.collection('Recordatorio').findOne({_id:ObjectId(id)})
+        return res
+       },
+
       getOneUser:async(_, { id }, { db }) =>{
         return await db.collection('User').findOne({ _id: ObjectId(id) });
       },
@@ -215,8 +240,7 @@ const resolvers = {
         if(dineroGastado.length=== 0){throw new Error('Debes agregar fecha, tipo y dinero gastado'); }
           const res = await db.collection('Gasto').insertOne(input).then(result =>
           db.collection('Gasto').findOne({ _id: result.insertedId }))
-          console.log(res);
-         db.collection('Vehicule')
+          db.collection('Vehicule')
               .updateOne({
                 _id: ObjectId(input.vehiculo)
               }, {
@@ -226,6 +250,21 @@ const resolvers = {
               })
               return res
               
+      },
+      createRecordatorio:async (_, {input}, {db, user})=>{
+        if (!user) { throw new Error('Authentication Error. Please sign in'); }
+        const newRecordatorio = {...input, user:user._id}
+        await db.collection('Recordatorio').insertOne(newRecordatorio)
+        db.collection('User')
+        .updateOne({
+          _id: ObjectId(user._id)
+        }, {
+          $push: {
+            recordatorio: newRecordatorio._id,
+          }
+        }
+        )
+  return newRecordatorio
       },
       signUp: async (_, { input }, { db, user }) => {
         try {
@@ -325,6 +364,9 @@ const resolvers = {
       id: ({ _id, id }) => _id || id,
     },
     Gasto:{
+      id: ({ _id, id }) => _id || id,
+    },
+    Recordatorio:{
       id: ({ _id, id }) => _id || id,
     },
   
