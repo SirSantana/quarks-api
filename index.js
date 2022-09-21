@@ -58,6 +58,7 @@ const typeDefs = gql`
     createGasto(input:CreateGastoInput!):Gasto
     updateGasto(input:CreateGastoInput!):Gasto
     deleteGasto(id:ID!, idVehiculo:ID!):String
+    deleteRecordatorio(id:ID!):String
     signUp(input: SignUpInput!): AuthUser
     signIn(input: SignInInput!): AuthUser
     editUser(input:UserInput!):User!
@@ -168,7 +169,7 @@ const resolvers = {
         return cars;
       },
       getRecordatorios:async(_, __, { db, user }) =>{
-        const recordatorios = await db.collection('Recordatorio').find({ user: ObjectId(user._id)}).toArray()
+        const recordatorios = await db.collection('Recordatorio').find({ user: ObjectId(user._id)}).sort({fecha:1}).toArray()
 
         return recordatorios;
       },
@@ -346,6 +347,17 @@ const resolvers = {
         try {
           await db.collection('Gasto').deleteOne({_id:ObjectId(id)})
           await db.collection('Vehicule').updateOne({_id:ObjectId(idVehiculo)}, {$pull:{gastos:ObjectId(id)}})
+          return id
+        } catch (error) {
+          throw new Error('Ha ocurrido un error');
+        }
+      },
+      deleteRecordatorio:async(_, {id}, {db, user})=>{
+        if (!user) { throw new Error('Authentication Error. Please sign in'); }
+        console.log(id, user._id);
+        try {
+          await db.collection('Recordatorio').deleteOne({_id:ObjectId(id)})
+          await db.collection('User').updateOne({_id:ObjectId(user._id)}, {$pull:{recordatorio:ObjectId(id)}})
           return id
         } catch (error) {
           throw new Error('Ha ocurrido un error');
