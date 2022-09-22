@@ -165,7 +165,6 @@ const resolvers = {
     
       getCars:async(_, __, { db, user }) =>{
         const cars = await db.collection('Vehicule').find({ user: ObjectId(user._id)}).toArray()
-
         return cars;
       },
       getRecordatorios:async(_, __, { db, user }) =>{
