@@ -237,8 +237,9 @@ const resolvers = {
         if(fecha == 'Invalid Date'){
           input.fecha = new Date()
         }
+        const newInput = {...input, dineroGastado:input.dineroGastado.replace(/[^0-9]/g, '')}
         if(dineroGastado.length=== 0){throw new Error('Debes agregar fecha, tipo y dinero gastado'); }
-          const res = await db.collection('Gasto').insertOne(input).then(result =>
+          const res = await db.collection('Gasto').insertOne(newInput).then(result =>
           db.collection('Gasto').findOne({ _id: result.insertedId }))
           db.collection('Vehicule')
               .updateOne({
