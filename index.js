@@ -52,6 +52,7 @@ const typeDefs = gql`
     getRecordatorios:[Recordatorio]!
     getOneRecordatorio(id:ID):Recordatorio
   }
+
   type Mutation {
     createCar(input:CreateVehiculeInput!):Vehicule
     updateCar(input:CreateVehiculeInput!):Vehicule
@@ -63,6 +64,7 @@ const typeDefs = gql`
     signIn(input: SignInInput!): AuthUser
     editUser(input:UserInput!):User!
     createRecordatorio(input:RecordatorioInput!):Recordatorio
+    createMensaje(input:MensajeInput!):Mensaje
   }
   input UserInput{
     name:String
@@ -75,6 +77,11 @@ const typeDefs = gql`
     titulo:String
     description:String
     fecha:Date
+  }
+  input MensajeInput{
+    texto:String
+    fecha:Date
+    marca:String
   }
   input SignUpInput {
     email: String!
@@ -102,6 +109,18 @@ const typeDefs = gql`
     id:ID
     vehiculo:ID
     fecha:Date
+  }
+  type Grupo{
+    name:String
+    miembros:[User]
+    mensajes:[Mensaje]
+  }
+  type Mensaje{
+    texto:String
+    user:ID
+    fecha:Date
+    marca:String
+    auto:String
   }
   type Recordatorio{
     titulo:String
@@ -265,7 +284,13 @@ const resolvers = {
           }
         }
         )
-  return newRecordatorio
+      return newRecordatorio
+
+      },
+      createMensaje:async (_, {input}, {db, user})=>{
+
+        console.log(input);
+
       },
       signUp: async (_, { input }, { db, user }) => {
         try {
