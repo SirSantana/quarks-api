@@ -51,6 +51,7 @@ const typeDefs = gql`
     getAllUsers:[User]!
     getRecordatorios:[Recordatorio]!
     getOneRecordatorio(id:ID):Recordatorio
+    getMensajes(marca:String):[Mensaje]
   }
 
   type Mutation {
@@ -82,6 +83,8 @@ const typeDefs = gql`
     texto:String
     fecha:Date
     marca:String
+    name:String
+    avatar:String
   }
   input SignUpInput {
     email: String!
@@ -120,7 +123,8 @@ const typeDefs = gql`
     user:ID
     fecha:Date
     marca:String
-    auto:String
+    name:String
+    avatar:String
   }
   type Recordatorio{
     titulo:String
@@ -214,6 +218,19 @@ const resolvers = {
      
       getUser:async(_,__, { user}) => {
         return user
+      },
+      getMensajes:async(_,{marca},{user, db})=>{
+        const mensajes =  await db.collection('Mensaje').find({marca:marca}).toArray()
+        if(mensajes.length >20){
+          const lastMessage = mensajes.shift()
+           await db.collection('Mensaje').deleteOne({_id:lastMessage._id})
+          return mensajes
+          
+        }else{
+          return mensajes
+
+        }
+
       }
       
     },
@@ -288,8 +305,13 @@ const resolvers = {
 
       },
       createMensaje:async (_, {input}, {db, user})=>{
+        if (!user) { throw new Error('Authentication Error. Please sign in'); }
 
-        console.log(input);
+        const newMensaje = {...input, user:user?._id, name:user?.name, avatar:user?.avatar}
+        console.log('inpit',input);
+        await db.collection('Mensaje').insertOne(newMensaje)
+
+        return newMensaje
 
       },
       signUp: async (_, { input }, { db, user }) => {
