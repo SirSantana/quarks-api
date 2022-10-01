@@ -90,7 +90,7 @@ const typeDefs = gql`
     email: String!
     password: String!
     name: String!
-    lastName:String!
+    apellido:String!
     confirmPassword:String
   }
   input CreateGastoInput{
@@ -315,17 +315,19 @@ const resolvers = {
 
       },
       signUp: async (_, { input }, { db, user }) => {
+        console.log(input);
         try {
           
           const existUser = await db.collection('User').findOne({email:input.email})
         if(existUser)throw new Error('User already exist')
         if(input.password !== input.confirmPassword){
-          throw new Error('Invalid Credentials')
+          throw new Error('Datos Invalidos. Las contraseñas no coinciden')
         }
         const hashedPassword = bcrypt.hashSync(input.password);
         const newUser = {
           email:input.email, 
-          name:input.name + " " + input.lastName,
+          name:input.name,
+          apellido:input.apellido,
           role:'Cliente',
           password: hashedPassword,
         }
@@ -348,7 +350,7 @@ const resolvers = {
         const user = await db.collection('User').findOne({ email: input.email });
         const isPasswordCorrect = user && bcrypt.compareSync(input.password, user.password);
         if (!user || !isPasswordCorrect) {
-          throw new Error('Invalid credentials!');
+          throw new Error('Datos Invalidos. Revisa tu Correo y Contraseña');
         }
   
         return {
