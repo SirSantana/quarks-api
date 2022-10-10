@@ -6,6 +6,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {GraphQLScalarType} = require('graphql')
 
+
+
+
+
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
   parseValue(value) {
@@ -245,12 +249,15 @@ const resolvers = {
                                 }, {
                                   returnDocument:'after'
                                 })
-                                console.log(result);
       return result.value
         
       },
       createCar:async (_, { input }, { db, user })=>{
         if (!user) { throw new Error('Authentication Error. Please sign in'); }
+
+
+
+
         const newCar = {...input, user:user._id}
         await db.collection('Vehicule').insertOne(newCar)
         db.collection('User')
@@ -274,6 +281,7 @@ const resolvers = {
           input.fecha = new Date()
         }
         const newInput = {...input, dineroGastado:input.dineroGastado.replace(/[^0-9]/g, '')}
+
         if(dineroGastado.length=== 0){throw new Error('Debes agregar fecha, tipo y dinero gastado'); }
           const res = await db.collection('Gasto').insertOne(newInput).then(result =>
           db.collection('Gasto').findOne({ _id: result.insertedId }))
@@ -308,14 +316,12 @@ const resolvers = {
         if (!user) { throw new Error('Authentication Error. Please sign in'); }
 
         const newMensaje = {...input, user:user?._id, name:user?.name, avatar:user?.avatar}
-        console.log('inpit',input);
         await db.collection('Mensaje').insertOne(newMensaje)
 
         return newMensaje
 
       },
       signUp: async (_, { input }, { db, user }) => {
-        console.log(input);
         try {
           
           const existUser = await db.collection('User').findOne({email:input.email})
@@ -334,7 +340,6 @@ const resolvers = {
         // save to database
          await db.collection('User').insertOne(newUser);
        const user = await db.collection('User').findOne({email:newUser.email})
-        console.log('use', user);
         return {
           user,
           token: getToken(user),
@@ -346,7 +351,6 @@ const resolvers = {
       },
   
       signIn: async (_, { input }, { db }) => {
-        console.log('input', input);
         const user = await db.collection('User').findOne({ email: input.email });
         const isPasswordCorrect = user && bcrypt.compareSync(input.password, user.password);
         if (!user || !isPasswordCorrect) {
