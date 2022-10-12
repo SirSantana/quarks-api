@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {GraphQLScalarType} = require('graphql')
 
-
+const cors = require('cors')
 
 
 
@@ -441,7 +441,7 @@ const resolvers = {
 
 const start= async()=>{
     const client = new MongoClient(URL, {useNewUrlParser:true, useUnifiedTopology:true})
-
+  cors()
     await client.connect()
     let totalIndexSize = 0;
     let totalDataSize = 0;
