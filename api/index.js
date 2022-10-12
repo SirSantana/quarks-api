@@ -441,7 +441,6 @@ const resolvers = {
 
 const start= async()=>{
     const client = new MongoClient(URL, {useNewUrlParser:true, useUnifiedTopology:true})
-  cors()
     await client.connect()
     let totalIndexSize = 0;
     let totalDataSize = 0;
@@ -479,7 +478,7 @@ const start= async()=>{
           }
         },
       });
-
+      server.applyMiddleware(cors())
     server.listen({ port: process.env.PORT || 4000 }).then(({url})=>{
         console.log(`Server ready at ${url}`)
     })
