@@ -53,7 +53,6 @@ const nodemailer = require('nodemailer')
           clientId:process.env.NEXT_PUBLIC_OAUTH_CLIENTID,
           clientSecret:process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRET,
           refreshToken:process.env.NEXT_PUBLIC_OAUTH_REFRESH_TOKEN,
-          expires:100000
         },
         
       });
