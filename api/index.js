@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const {GraphQLScalarType} = require('graphql')
 const resolvers = require('../graphql/resolvers')
 const typeDefs = require('../graphql/models')
-
+const mutations = require('../graphql/resolvers/mutations')
 
 const URL = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.exgvi.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`
 
@@ -70,6 +70,7 @@ const start= async()=>{
         // },
         async ({ req }) => {
           const user = await getUserFromToken(req.headers.authorization, db);
+          console.log('useee',user);
           return {
             db,
             user,

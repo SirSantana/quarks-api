@@ -1,6 +1,6 @@
  
 const {ApolloServer, gql} = require('apollo-server')
- 
+
 const typeDefs = gql`
  scalar Date
 
@@ -20,6 +20,7 @@ const typeDefs = gql`
    getMensajes(marca:String):[Mensaje]
  }
 
+
  type Mutation {
    createCar(input:CreateVehiculeInput!):Vehicule
    updateCar(input:CreateVehiculeInput!):Vehicule
@@ -30,9 +31,14 @@ const typeDefs = gql`
    signUp(input: SignUpInput!): AuthUser
    signIn(input: SignInInput!): AuthUser
    editUser(input:UserInput!):User!
+   
+   sendMessagePassword(email:String, codigo:Int):String
+   changePassword(email:String,password:String, confirmPassword:String):String
+
    createRecordatorio(input:RecordatorioInput!):Recordatorio
    createMensaje(input:MensajeInput!):Mensaje
  }
+ 
  input UserInput{
    name:String
    apellido:String
@@ -118,6 +124,7 @@ const typeDefs = gql`
    user: User!
    token: String!
  }
+ 
  type User {
    id: ID
    name: String

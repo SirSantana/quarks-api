@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const { ObjectId } = require("mongodb");
+const { getTemplate2, sendMail } = require('../../libs/mail');
+
 
 
 
@@ -70,7 +72,52 @@ const mutations = {
       token: getToken(user),
     };
   },
+  sendMessagePassword:async(_,{email, codigo},{db})=>{
+    console.log(codigo);
+   const template = getTemplate2(codigo);
+   const user = await db.collection("User").findOne({ email: email });
+    if(!user){
+      throw new Error("Correo no registrado");
+    }
+    let mailOptions = {
+      from: "quarkscolombia@gmail.com",
+      to: email,
+      subject: "Quarks",
+      text: "Cambio de contraseña",
+      htmL: null,
+    };
+     await sendMail(mailOptions, template);
+    return 'true'
 
+  },
+  changePassword:async(_,{email, password, confirmPassword},{db})=>{
+    
+    console.log(password);
+    console.log('email',email);
+    
+    const user = await db.collection("User").findOne({ email: email });
+    const hashedPassword = bcrypt.hashSync(password);
+
+    console.log('user', user);
+    if (!user) {
+      throw new Error("Correo no registrado");
+    }
+    const result = await db.collection("User").findOneAndUpdate(
+      {
+        email: email,
+      },
+      {
+        $set: {
+          password:hashedPassword
+        },
+      },
+      {
+        returnDocument: "after",
+      }
+    );
+    return result.ok 
+  },
+  
     //CAR
   createCar: async (_, { input }, { db, user }) => {
     if (!user) {
@@ -209,7 +256,6 @@ const mutations = {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-    console.log(id, user._id);
     try {
       await db.collection("Recordatorio").deleteOne({ _id: ObjectId(id) });
       await db
