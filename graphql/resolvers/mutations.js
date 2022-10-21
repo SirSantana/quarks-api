@@ -73,7 +73,7 @@ const mutations = {
     };
   },
   sendMessagePassword:async(_,{email, codigo},{db})=>{
-    console.log(codigo);
+
    const template = getTemplate2(codigo);
    const user = await db.collection("User").findOne({ email: email });
     if(!user){
@@ -92,13 +92,10 @@ const mutations = {
   },
   changePassword:async(_,{email, password, confirmPassword},{db})=>{
     
-    console.log(password);
-    console.log('email',email);
     
     const user = await db.collection("User").findOne({ email: email });
     const hashedPassword = bcrypt.hashSync(password);
 
-    console.log('user', user);
     if (!user) {
       throw new Error("Correo no registrado");
     }

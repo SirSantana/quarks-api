@@ -71,7 +71,6 @@ const nodemailer = require('nodemailer')
 
     
     await new Promise((resolve, reject) => {
-        console.log('reject', reject);
         // send mail
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
