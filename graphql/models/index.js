@@ -15,7 +15,7 @@ const typeDefs = gql`
    getOneGasto(id:ID):Gasto
    getOneUser(id:ID!):User!
    getAllUsers:[User]!
-   getRecordatorios:[Recordatorio]!
+   getRecordatorios(id:ID):[Recordatorio]!
    getOneRecordatorio(id:ID):Recordatorio
    getMensajes(marca:String):[Mensaje]
  }
@@ -50,6 +50,7 @@ const typeDefs = gql`
    titulo:String
    description:String
    fecha:Date
+   vehiculo:ID
  }
  input MensajeInput{
    texto:String
@@ -103,7 +104,7 @@ const typeDefs = gql`
    description:String
    fecha:Date
    id:ID
-   user:ID
+   vehiculo:ID
  }
 
  input CreateVehiculeInput{

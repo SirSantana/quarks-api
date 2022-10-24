@@ -70,7 +70,6 @@ const start= async()=>{
         // },
         async ({ req }) => {
           const user = await getUserFromToken(req.headers.authorization, db);
-          console.log('useee',user);
           return {
             db,
             user,

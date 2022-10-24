@@ -140,7 +140,6 @@ const mutations = {
       throw new Error("Authentication Error. Please sign in");
     }
     const { input } = data;
-    console.log("dataaaaa", input);
     const result = await db.collection("Vehicule").findOneAndUpdate(
       {
         _id: ObjectId(input.id),
@@ -235,11 +234,12 @@ const mutations = {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-    const newRecordatorio = { ...input, user: user._id };
+    console.log('inpu',input);
+    const newRecordatorio = { ...input };
     await db.collection("Recordatorio").insertOne(newRecordatorio);
-    db.collection("User").updateOne(
+    db.collection("Vehicule").updateOne(
       {
-        _id: ObjectId(user._id),
+        _id: ObjectId(input.vehiculo),
       },
       {
         $push: {
@@ -256,9 +256,9 @@ const mutations = {
     try {
       await db.collection("Recordatorio").deleteOne({ _id: ObjectId(id) });
       await db
-        .collection("User")
+        .collection("Vehicule")
         .updateOne(
-          { _id: ObjectId(user._id) },
+          { recordatorio: ObjectId(id) },
           { $pull: { recordatorio: ObjectId(id) } }
         );
       return id;

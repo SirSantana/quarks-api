@@ -12,13 +12,15 @@ const querys = {
   },
 
   //RECORDATORIOS
-  getRecordatorios: async (_, __, { db, user }) => {
+  getRecordatorios: async (_, {id}, { db }) => {
+    console.log('hola');
+    console.log('id', id);
     const recordatorios = await db
       .collection("Recordatorio")
-      .find({ user: ObjectId(user._id) })
+      .find({ vehiculo: id })
       .sort({ fecha: 1 })
       .toArray();
-
+    console.log(recordatorios);
     return recordatorios;
   },
   getOneRecordatorio: async (_, { id }, { db }) => {
