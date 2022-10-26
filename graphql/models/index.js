@@ -18,6 +18,9 @@ const typeDefs = gql`
    getRecordatorios(id:ID):[Recordatorio]!
    getOneRecordatorio(id:ID):Recordatorio
    getMensajes(marca:String):[Mensaje]
+   getNegocios:[Negocio]
+   getOneNegocio(id:ID):Negocio
+
  }
 
 
@@ -85,6 +88,19 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Negocio{
+  tipo:String
+  nombre:String
+  direccion:String
+  ciudad:String
+  pais:String
+  premium:Boolean
+  celular:String
+  marcas:[String]
+  repuestos:[String]
+  id:ID
+
  }
  type Grupo{
    name:String

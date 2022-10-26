@@ -21,6 +21,9 @@ const querys = require('./querys');
     Recordatorio:{
       id: ({ _id, id }) => _id || id,
     },
+    Negocio:{
+      id: ({ _id, id }) => _id || id,
+    },
   
   
   };

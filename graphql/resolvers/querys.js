@@ -82,6 +82,15 @@ const querys = {
       return mensajes;
     }
   },
+
+  getNegocios:async(_,__, {db})=>{
+    const negocios = await db.collection('Negocios').find().toArray()
+    return negocios
+  },
+  getOneNegocio:async(_,{id}, {db})=>{
+    const negocio = await db.collection('Negocios').findOne({ _id: ObjectId(id) });
+    return negocio
+  },
 };
 
 module.exports = querys;
