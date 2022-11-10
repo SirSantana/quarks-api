@@ -105,7 +105,12 @@ const querys = {
   getProductos:async(_, __,{db})=>{
     const productos = await db.collection('Productos').find().toArray()
     return productos
-  }
+  },
+  getOneProducto:async(_,{id}, {db})=>{
+    const negocio = await db.collection('Productos').findOne({ _id: ObjectId(id) });
+    return negocio
+  },
+
 };
 
 module.exports = querys;

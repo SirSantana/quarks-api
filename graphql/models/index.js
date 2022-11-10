@@ -24,6 +24,7 @@ const typeDefs = gql`
    getTalleres:[Negocio]
   
    getProductos:[Producto]
+   getOneProducto(id:ID):Producto
 
  }
 
@@ -100,6 +101,8 @@ const typeDefs = gql`
   precio:String
   garantia:String
   id:ID
+  imagen:String
+  linkpago:String
  }
  type Negocio{
   tipo:String
