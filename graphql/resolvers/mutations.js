@@ -195,7 +195,6 @@ const mutations = {
       throw new Error("Authentication Error. Please sign in");
     }
     const { input } = data;
-    console.log("da", input);
     const result = await db.collection("Gasto").findOneAndUpdate(
       {
         _id: ObjectId(input.id),
@@ -211,7 +210,6 @@ const mutations = {
     return result.value;
   },
   deleteGasto: async (_, { id, idVehiculo }, { db, user }) => {
-    console.log(id, idVehiculo);
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }

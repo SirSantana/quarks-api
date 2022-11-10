@@ -87,10 +87,25 @@ const querys = {
     const negocios = await db.collection('Negocios').find().toArray()
     return negocios
   },
+  getAlmacenes:async(_,__,{db})=>{
+    const negocios = await db.collection('Negocios').find({tipo:'Almacen'}).toArray()
+    console.log(negocios);
+
+    return negocios
+  },
+  getTalleres:async(_, __, {db})=>{
+    const negocios = await db.collection('Negocios').find({tipo:'Taller'}).toArray()
+    return negocios
+  },
   getOneNegocio:async(_,{id}, {db})=>{
     const negocio = await db.collection('Negocios').findOne({ _id: ObjectId(id) });
     return negocio
   },
+
+  getProductos:async(_, __,{db})=>{
+    const productos = await db.collection('Productos').find().toArray()
+    return productos
+  }
 };
 
 module.exports = querys;

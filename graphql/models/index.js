@@ -20,6 +20,10 @@ const typeDefs = gql`
    getMensajes(marca:String):[Mensaje]
    getNegocios:[Negocio]
    getOneNegocio(id:ID):Negocio
+   getAlmacenes:[Negocio]
+   getTalleres:[Negocio]
+  
+   getProductos:[Producto]
 
  }
 
@@ -88,6 +92,14 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Producto{
+  user:ID
+  titulo:String
+  descripcion:String
+  precio:String
+  garantia:String
+  id:ID
  }
  type Negocio{
   tipo:String
