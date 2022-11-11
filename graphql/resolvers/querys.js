@@ -102,6 +102,8 @@ const querys = {
     return negocio
   },
 
+
+  //PRODUCTOS
   getProductos:async(_, __,{db})=>{
     const productos = await db.collection('Productos').find().toArray()
     return productos
@@ -109,6 +111,17 @@ const querys = {
   getOneProducto:async(_,{id}, {db})=>{
     const negocio = await db.collection('Productos').findOne({ _id: ObjectId(id) });
     return negocio
+  },
+
+
+  //PREGUNTAS&&COTIZACIONES
+  getPreguntas:async(_,__,{db})=>{
+    const preguntas = await db.collection('Preguntas').find().toArray()
+    return preguntas
+  },
+  getOnePregunta:async(_,{id}, {db})=>{
+    const pregunta = await db.collection('Preguntas').findOne({ _id: ObjectId(id) });
+    return pregunta
   },
 
 };

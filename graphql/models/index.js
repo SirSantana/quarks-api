@@ -26,6 +26,9 @@ const typeDefs = gql`
    getProductos:[Producto]
    getOneProducto(id:ID):Producto
 
+   getPreguntas:[Pregunta]
+   getOnePregunta(id:ID):Pregunta
+
  }
 
 
@@ -93,6 +96,29 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Pregunta{
+  marca:String
+  titulo:String
+  userName:String
+  cotizaciones:[ID]
+  fecha:Date
+  user:ID
+  celular:String
+  id:ID
+  referencia:String
+  extras:String
+
+ }
+ type Cotizacion{
+  userName:String
+  mensaje:String
+  precio:String
+  fecha:Date
+  user:ID
+  preguntaId:ID
+  id:ID
+
  }
  type Producto{
   user:ID

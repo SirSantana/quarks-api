@@ -26,7 +26,9 @@ const querys = require('./querys');
     },
     Producto:{
       id: ({ _id, id }) => _id || id,
-
+    },
+    Pregunta:{
+      id: ({ _id, id }) => _id || id,
     }
   
   
