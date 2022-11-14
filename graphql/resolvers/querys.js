@@ -121,9 +121,13 @@ const querys = {
 
 
   //PREGUNTAS&&COTIZACIONES
-  getPreguntas:async(_,__,{db})=>{
-    const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
+  getPreguntas:async(_,{split, marca},{db})=>{
+    const preguntas = await db.collection('Preguntas').find({marca:marca}).limit(split).toArray()
+    console.log(marca);
+    console.log(preguntas);
     return preguntas
+    // const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
+    // return preguntas
   },
   getOnePregunta:async(_,{id}, {db})=>{
     const pregunta = await db.collection('Preguntas').findOne({ _id: ObjectId(id) });

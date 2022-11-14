@@ -27,7 +27,7 @@ const typeDefs = gql`
    getProductos:[Producto]
    getOneProducto(id:ID):Producto
 
-   getPreguntas:[Pregunta]
+   getPreguntas(split:Int,marca:String):[Pregunta]
    getOnePregunta(id:ID):Pregunta
    getBusquedaPreguntas(word:String):[Pregunta]
 
