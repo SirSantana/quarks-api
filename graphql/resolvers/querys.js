@@ -122,7 +122,7 @@ const querys = {
 
   //PREGUNTAS&&COTIZACIONES
   getPreguntas:async(_,__,{db})=>{
-    const preguntas = await db.collection('Preguntas').find().toArray()
+    const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
     return preguntas
   },
   getOnePregunta:async(_,{id}, {db})=>{
