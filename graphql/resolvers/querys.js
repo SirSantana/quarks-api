@@ -93,6 +93,12 @@ const querys = {
 
     return negocios
   },
+  getAlmacens:async(_,{split},{db})=>{
+    console.log(split);
+    const negocios = await db.collection('Negocios').find({tipo:'Almacen'}).limit(split).toArray()
+
+    return negocios
+  },
   getTalleres:async(_, __, {db})=>{
     const negocios = await db.collection('Negocios').find({tipo:'Taller'}).toArray()
     return negocios
@@ -122,6 +128,13 @@ const querys = {
   getOnePregunta:async(_,{id}, {db})=>{
     const pregunta = await db.collection('Preguntas').findOne({ _id: ObjectId(id) });
     return pregunta
+  },
+  getBusquedaPreguntas:async(_,{word}, {db})=>{
+    console.log(word);
+    // const pregunta = await db.collection('Preguntas').find({marca:{$in:[word]}}).toArray()
+    const pregunta2 = await db.collection('Preguntas').find({$text:{$search:`\"${word}\"`}},{titulo:1, marca:1}).toArray()
+    console.log(pregunta2);
+    return pregunta2
   },
 
 };

@@ -21,6 +21,7 @@ const typeDefs = gql`
    getNegocios:[Negocio]
    getOneNegocio(id:ID):Negocio
    getAlmacenes:[Negocio]
+   getAlmacens(split:Int):[Negocio]
    getTalleres:[Negocio]
   
    getProductos:[Producto]
@@ -28,6 +29,7 @@ const typeDefs = gql`
 
    getPreguntas:[Pregunta]
    getOnePregunta(id:ID):Pregunta
+   getBusquedaPreguntas(word:String):[Pregunta]
 
  }
 
