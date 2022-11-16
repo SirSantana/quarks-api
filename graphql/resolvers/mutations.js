@@ -285,7 +285,7 @@ const mutations = {
 
   //PREGUNTA
   createPregunta:async (_, { input }, { db, user }) => {
-    const newInput = {...input, fecha:new Date()}
+    const newInput = {...input, fecha:new Date(), titulo:input.referencia}
     if(user){
 
     }else{
