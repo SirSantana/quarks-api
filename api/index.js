@@ -50,6 +50,7 @@ const start= async()=>{
     console.log("Total index size in GB: " + totalIndexSize);
     console.log("Total data size in GB: " + totalDataSize);
 
+
     const server = new ApolloServer({ 
         typeDefs, 
         resolvers: {

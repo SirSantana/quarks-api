@@ -122,9 +122,8 @@ const querys = {
 
   //PREGUNTAS&&COTIZACIONES
   getPreguntas:async(_,{split, marca},{db})=>{
+    // db.collection('Preguntas').dropIndex( "marcas_text_titulo_text" )
     const preguntas = await db.collection('Preguntas').find({marca:marca}).limit(split).toArray()
-    console.log(marca);
-    console.log(preguntas);
     return preguntas
     // const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
     // return preguntas
@@ -134,9 +133,9 @@ const querys = {
     return pregunta
   },
   getBusquedaPreguntas:async(_,{word}, {db})=>{
-    console.log(word);
+
     // const pregunta = await db.collection('Preguntas').find({marca:{$in:[word]}}).toArray()
-    const pregunta2 = await db.collection('Preguntas').find({$text:{$search:`\"${word}\"`}},{titulo:1, marca:1}).toArray()
+    const pregunta2 = await db.collection('Preguntas').find({$text:{$search:word}}, { score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).toArray()
     console.log(pregunta2);
     return pregunta2
   },
