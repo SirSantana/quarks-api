@@ -136,7 +136,6 @@ const querys = {
 
     // const pregunta = await db.collection('Preguntas').find({marca:{$in:[word]}}).toArray()
     const pregunta2 = await db.collection('Preguntas').find({$text:{$search:word}}, { score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).toArray()
-    console.log(pregunta2);
     return pregunta2
   },
 
