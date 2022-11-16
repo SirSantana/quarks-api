@@ -50,6 +50,8 @@ const typeDefs = gql`
 
    createRecordatorio(input:RecordatorioInput!):Recordatorio
    createMensaje(input:MensajeInput!):Mensaje
+
+   createPregunta(input:PreguntaInput):Pregunta
  }
  
  input UserInput{
@@ -58,6 +60,16 @@ const typeDefs = gql`
    avatar:String
    ciudad:String
    pais:String
+ }
+ input PreguntaInput{
+  celular:String
+  user:ID
+  id:ID
+  fecha:Date
+  marca:String
+  referencia:String
+  userName:String
+  titulo:String
  }
  input RecordatorioInput{
    titulo:String

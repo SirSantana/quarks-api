@@ -282,5 +282,17 @@ const mutations = {
     return newMensaje;
   },
   
+
+  //PREGUNTA
+  createPregunta:async (_, { input }, { db, user }) => {
+    const newInput = {...input, fecha:new Date()}
+    if(user){
+
+    }else{
+      const res = await db
+      .collection("Preguntas")
+      .insertOne(newInput)
+    }
+  },
 };
 module.exports = mutations
