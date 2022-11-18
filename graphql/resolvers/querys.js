@@ -135,10 +135,20 @@ const querys = {
   getBusquedaPreguntas:async(_,{word}, {db})=>{
 
     // const pregunta = await db.collection('Preguntas').find({marca:{$in:[word]}}).toArray()
-    const pregunta2 = await db.collection('Preguntas').find({$text:{$search:word}}, { score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).toArray()
+    const pregunta2 = await db.collection('Preguntas')
+                            .find({$text:{$search:word}},{score: { $meta: "textScore" } })
+                            .sort( { score: { $meta: "textScore" } } )
+                            .toArray()
     return pregunta2
   },
 
+  getCotizaciones:async(_,{id}, {db})=>{
+    console.log(id);
+    const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
+    console.log(cotizaciones);
+
+    return cotizaciones
+  },
 };
 
 module.exports = querys;

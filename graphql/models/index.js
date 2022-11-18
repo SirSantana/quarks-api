@@ -30,7 +30,7 @@ const typeDefs = gql`
    getPreguntas(split:Int,marca:String):[Pregunta]
    getOnePregunta(id:ID):Pregunta
    getBusquedaPreguntas(word:String):[Pregunta]
-
+   getCotizaciones(id:ID):[Cotizacion]
  }
 
 
@@ -52,6 +52,7 @@ const typeDefs = gql`
    createMensaje(input:MensajeInput!):Mensaje
 
    createPregunta(input:PreguntaInput):Pregunta
+   createCotizacion(input:CotizacionInput):Cotizacion
  }
  
  input UserInput{
@@ -70,6 +71,16 @@ const typeDefs = gql`
   referencia:String
   userName:String
   titulo:String
+ }
+ input CotizacionInput{
+  garantia:String
+  fecha:Date
+  id:ID
+  user:ID
+  pregunta:ID
+  marca:String
+  descripcion:String
+  precio:String
  }
  input RecordatorioInput{
    titulo:String
@@ -122,17 +133,18 @@ const typeDefs = gql`
   id:ID
   referencia:String
   extras:String
-
  }
  type Cotizacion{
-  userName:String
-  mensaje:String
+  descripcion:String
   precio:String
+  marca:String
   fecha:Date
   user:ID
-  preguntaId:ID
+  pregunta:ID
+  garantia:String
   id:ID
-
+  imagen:String
+  celular:String
  }
  type Producto{
   user:ID
@@ -210,6 +222,7 @@ const typeDefs = gql`
    pais:String
    vehiculos:[ID]
    recordatorio:[ID]
+   cotizaciones:[ID]
  }
  type Vehicule{
    tipo:String

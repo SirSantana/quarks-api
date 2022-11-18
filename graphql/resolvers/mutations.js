@@ -294,5 +294,33 @@ const mutations = {
       .insertOne(newInput)
     }
   },
+
+  //COTIZACION
+  createCotizacion:async (_, { input }, { db, user }) => {
+    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular}
+    await db.collection("Cotizacion").insertOne(newInput);
+    db.collection("Preguntas").updateOne(
+      {
+        _id: ObjectId(input.pregunta),
+      },
+      {
+        $push: {
+          cotizaciones: newInput._id,
+        },
+      }
+    )
+    db.collection("User").updateOne(
+      {
+        _id: ObjectId(user._id),
+      },
+      {
+        $push: {
+          cotizaciones: newInput._id,
+        },
+      }
+    )
+    
+    return newInput
+  },
 };
 module.exports = mutations

@@ -29,6 +29,9 @@ const querys = require('./querys');
     },
     Pregunta:{
       id: ({ _id, id }) => _id || id,
+    },
+    Cotizacion:{
+      id: ({ _id, id }) => _id || id,
     }
   
   
