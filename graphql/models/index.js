@@ -8,13 +8,15 @@ const typeDefs = gql`
   created: Date
  }
  type Query {
-   getUser:User!
    getCars:[Vehicule]
    getPrevGastos(id:ID):[Gasto]
    getAllGastos(id:ID):[Gasto]
    getOneGasto(id:ID):Gasto
+
+   getUser:User!
    getOneUser(id:ID!):User!
    getAllUsers:[User]!
+   
    getRecordatorios(id:ID):[Recordatorio]!
    getOneRecordatorio(id:ID):Recordatorio
    getMensajes(marca:String):[Mensaje]
@@ -133,6 +135,8 @@ const typeDefs = gql`
   id:ID
   referencia:String
   extras:String
+
+
  }
  type Cotizacion{
   descripcion:String
@@ -234,7 +238,9 @@ const typeDefs = gql`
    user:ID
    id:ID
    gastos:[ID]
+   
  }
+
 
 `;
 
