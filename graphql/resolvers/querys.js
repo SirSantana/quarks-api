@@ -123,7 +123,7 @@ const querys = {
   //PREGUNTAS&&COTIZACIONES
   getPreguntas:async(_,{split, marca},{db})=>{
     // db.collection('Preguntas').dropIndex( "marcas_text_titulo_text" )
-    const preguntas = await db.collection('Preguntas').find({marca:marca}).limit(split).toArray()
+    const preguntas = await db.collection('Preguntas').find({marca:marca}).sort({fecha:-1}).limit(split).toArray()
     return preguntas
     // const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
     // return preguntas
