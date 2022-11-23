@@ -33,6 +33,7 @@ const typeDefs = gql`
    getBusquedaPreguntas(word:String):[Pregunta]
    getCotizaciones(id:ID):[Cotizacion]
 
+   preguntas(limit:Int, offset:Int):[Pregunta]
  }
 
 
@@ -84,7 +85,7 @@ const typeDefs = gql`
   descripcion:String
   precio:String
   envio:Boolean
-  stock:Int
+  stock:String
  }
  input RecordatorioInput{
    titulo:String
@@ -151,6 +152,8 @@ const typeDefs = gql`
   id:ID
   imagen:String
   celular:String
+  envio:Boolean
+  stock:Int
  }
  type Producto{
   user:ID

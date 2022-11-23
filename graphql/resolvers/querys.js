@@ -142,7 +142,6 @@ const querys = {
 
   getCotizaciones:async(_,{id}, {db})=>{
     const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
-
     return cotizaciones
   },
 };
