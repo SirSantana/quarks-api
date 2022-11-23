@@ -15,7 +15,6 @@ const typeDefs = gql`
 
    getUser:User!
    getOneUser(id:ID!):User!
-   getAllUsers:[User]!
    
    getRecordatorios(id:ID):[Recordatorio]!
    getOneRecordatorio(id:ID):Recordatorio
@@ -29,10 +28,11 @@ const typeDefs = gql`
    getProductos:[Producto]
    getOneProducto(id:ID):Producto
 
-   getPreguntas(split:Int,marca:String):[Pregunta]
+   getPreguntas(limit:Int,marca:String):[Pregunta]
    getOnePregunta(id:ID):Pregunta
    getBusquedaPreguntas(word:String):[Pregunta]
    getCotizaciones(id:ID):[Cotizacion]
+
  }
 
 
@@ -83,6 +83,8 @@ const typeDefs = gql`
   marca:String
   descripcion:String
   precio:String
+  envio:Boolean
+  stock:Int
  }
  input RecordatorioInput{
    titulo:String

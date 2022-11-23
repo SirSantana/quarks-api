@@ -47,10 +47,6 @@ const start= async()=>{
     totalIndexSize += (stats.then(res=> console.log(res.indexSize /(1024*1024*1024)) )) ;
     totalDataSize += (stats.then(res=> console.log(res.dataSize /(1024*1024*1024)))) ;
 
-    console.log("Total index size in GB: " + totalIndexSize);
-    console.log("Total data size in GB: " + totalDataSize);
-
-
     const server = new ApolloServer({ 
         typeDefs, 
         resolvers: {
@@ -79,7 +75,7 @@ const start= async()=>{
       });
     server.listen({ port: process.env.PORT || 4000 }).then(({url})=>{
         console.log(`Server ready at ${url}`)
-    })
+    });
 }
 
 start()

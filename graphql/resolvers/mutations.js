@@ -298,6 +298,8 @@ const mutations = {
   //COTIZACION
   createCotizacion:async (_, { input }, { db, user }) => {
     const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular}
+    
+    console.log(newInput);
     await db.collection("Cotizacion").insertOne(newInput);
     db.collection("Preguntas").updateOne(
       {

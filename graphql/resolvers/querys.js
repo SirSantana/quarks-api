@@ -63,9 +63,6 @@ const querys = {
   getUser: async (_, __, { user }) => {
     return user;
   },
-  getAllUsers: async (_, __, { db }) => {
-    return await db.collection("User").find({}).toArray();
-  },
 
 
   //MENSAJES
@@ -121,13 +118,14 @@ const querys = {
 
 
   //PREGUNTAS&&COTIZACIONES
-  getPreguntas:async(_,{split, marca},{db})=>{
+  getPreguntas:async(_,{marca, limit},{db})=>{
     // db.collection('Preguntas').dropIndex( "marcas_text_titulo_text" )
-    const preguntas = await db.collection('Preguntas').find({marca:marca}).sort({fecha:-1}).limit(split).toArray()
+    const preguntas = await db.collection('Preguntas').find({marca:marca}).sort({fecha:-1}).limit(limit).toArray()
     return preguntas
     // const preguntas = await db.collection('Preguntas').find({}).limit(7).toArray()
     // return preguntas
   },
+  
   getOnePregunta:async(_,{id}, {db})=>{
     const pregunta = await db.collection('Preguntas').findOne({ _id: ObjectId(id) });
     return pregunta
