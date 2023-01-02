@@ -13,8 +13,6 @@ const querys = {
 
   //RECORDATORIOS
   getRecordatorios: async (_, {id}, { db }) => {
-    console.log('hola');
-    console.log('id', id);
     const recordatorios = await db
       .collection("Recordatorio")
       .find({ vehiculo: id })
@@ -86,12 +84,10 @@ const querys = {
   },
   getAlmacenes:async(_,__,{db})=>{
     const negocios = await db.collection('Negocios').find({tipo:'Almacen'}).toArray()
-    console.log(negocios);
 
     return negocios
   },
   getAlmacens:async(_,{split},{db})=>{
-    console.log(split);
     const negocios = await db.collection('Negocios').find({tipo:'Almacen'}).limit(split).toArray()
 
     return negocios
@@ -131,12 +127,16 @@ const querys = {
     return pregunta
   },
   getBusquedaPreguntas:async(_,{word}, {db})=>{
+    console.log('lssasa',word);
 
     // const pregunta = await db.collection('Preguntas').find({marca:{$in:[word]}}).toArray()
     const pregunta2 = await db.collection('Preguntas')
                             .find({$text:{$search:word}},{score: { $meta: "textScore" } })
                             .sort( { score: { $meta: "textScore" } } )
+                            .limit(8)
                             .toArray()
+                           
+    console.log(pregunta2.length);
     return pregunta2
   },
 
