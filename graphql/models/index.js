@@ -74,6 +74,7 @@ const typeDefs = gql`
   referencia:String
   userName:String
   titulo:String
+  imagen:String
  }
  input CotizacionInput{
   garantia:String
@@ -138,7 +139,7 @@ const typeDefs = gql`
   id:ID
   referencia:String
   extras:String
-
+  imagen:String
 
  }
  type Cotizacion{

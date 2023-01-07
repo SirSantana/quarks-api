@@ -136,7 +136,6 @@ const querys = {
                             .limit(8)
                             .toArray()
                            
-    console.log(pregunta2.length);
     return pregunta2
   },
 
