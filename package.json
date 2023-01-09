@@ -11,9 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@azure/storage-blob": "^12.11.0",
     "apollo-server": "3.10.1",
-    "azure-storage": "^2.10.7",
     "bcryptjs": "2.4.3",
     "dotenv": "16.0.1",
     "graphql": "16.6.0",
