@@ -54,7 +54,7 @@ const start= async()=>{
           Date: dateScalar,
         },
         debug:true,
-        introspection:false,
+        // introspection:false,
         context: 
         // async ({ req }) => {
         //   console.log('req',req.headers.authorization);

@@ -60,11 +60,15 @@ const mutations = {
     }
   },
   signIn: async (_, { input }, { db }) => {
+    console.log(input);
     const user = await db.collection("User").findOne({ email: input.email });
     const isPasswordCorrect =
       user && bcrypt.compareSync(input.password, user.password);
     if (!user || !isPasswordCorrect) {
       throw new Error("Datos Invalidos. Revisa tu Correo y Contraseña");
+    }
+    if(user.role === 'Vendedor' && user?.verified === false){
+      return new Error("Estamos validando tu cuenta");
     }
 
     return {
@@ -284,23 +288,17 @@ const mutations = {
   
 
   //PREGUNTA
-  createPregunta:async (_, { input }, { db, user }) => {
-    console.log(input);
+  createPregunta:async (_, { input }, { db }) => {
     const newInput = {...input, fecha:new Date(), titulo:input.titulo +" de " +  input.referencia}
-    if(user){
-      
-    }else{
       const res = await db
       .collection("Preguntas")
       .insertOne(newInput)
-    }
   },
 
   //COTIZACION
   createCotizacion:async (_, { input }, { db, user }) => {
     const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular}
     
-    console.log(newInput);
     await db.collection("Cotizacion").insertOne(newInput);
     db.collection("Preguntas").updateOne(
       {
@@ -324,6 +322,27 @@ const mutations = {
     )
     
     return newInput
+  },
+  // VENDEDOR
+  createVendedor: async (_, { input }, { db }) => {
+    try {
+      const existUser = await db
+        .collection("User")
+        .findOne({ email: input.email });
+      if (existUser) throw new Error("User already exist");
+      const hashedPassword = bcrypt.hashSync(input.password);
+      const newVendedor = {
+        ...input,
+        password: hashedPassword,
+        role: "Vendedor",
+      };
+      // save to database
+      await db.collection("User").insertOne(newVendedor);
+      
+    } catch (error) {
+      return new Error(error);
+    }
+    
   },
 };
 module.exports = mutations

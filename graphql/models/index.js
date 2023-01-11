@@ -1,5 +1,5 @@
- 
-const {ApolloServer, gql} = require('apollo-server')
+
+const { ApolloServer, gql } = require('apollo-server')
 
 const typeDefs = gql`
  scalar Date
@@ -40,18 +40,23 @@ const typeDefs = gql`
  type Mutation {
    createCar(input:CreateVehiculeInput!):Vehicule
    updateCar(input:CreateVehiculeInput!):Vehicule
+
    createGasto(input:CreateGastoInput!):Gasto
    updateGasto(input:CreateGastoInput!):Gasto
    deleteGasto(id:ID!, idVehiculo:ID!):String
+
+   createRecordatorio(input:RecordatorioInput!):Recordatorio
    deleteRecordatorio(id:ID!):String
+
    signUp(input: SignUpInput!): AuthUser
    signIn(input: SignInInput!): AuthUser
    editUser(input:UserInput!):User!
+
+   createVendedor(input:VendedorCreateInput):String
    
    sendMessagePassword(email:String, codigo:Int):String
    changePassword(email:String,password:String, confirmPassword:String):String
 
-   createRecordatorio(input:RecordatorioInput!):Recordatorio
    createMensaje(input:MensajeInput!):Mensaje
 
    createPregunta(input:PreguntaInput):Pregunta
@@ -140,7 +145,6 @@ const typeDefs = gql`
   referencia:String
   extras:String
   imagen:String
-
  }
  type Cotizacion{
   descripcion:String
@@ -218,7 +222,17 @@ const typeDefs = gql`
    user: User!
    token: String!
  }
- 
+ input VendedorCreateInput{
+  email:String
+  name:String
+  almacen:String
+  direccion:String
+  ciudad:String
+  celular:String
+  verified:Boolean
+  marcas:[Boolean]
+  password:String
+ }
  type User {
    id: ID
    name: String
@@ -233,6 +247,11 @@ const typeDefs = gql`
    vehiculos:[ID]
    recordatorio:[ID]
    cotizaciones:[ID]
+   verified:Boolean
+   marcas:[String]
+   celular:String
+   direccion:String
+   almacen:String
  }
  type Vehicule{
    tipo:String
@@ -244,7 +263,6 @@ const typeDefs = gql`
    user:ID
    id:ID
    gastos:[ID]
-   
  }
 
 
