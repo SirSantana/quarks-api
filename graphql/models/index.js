@@ -14,7 +14,7 @@ const typeDefs = gql`
    getOneGasto(id:ID):Gasto
 
    getUser:User!
-   getOneUser(id:ID!):User!
+   getOneUser(id:ID):User
    
    getRecordatorios(id:ID):[Recordatorio]!
    getOneRecordatorio(id:ID):Recordatorio
@@ -105,6 +105,7 @@ const typeDefs = gql`
   precio:String
   envio:Boolean
   stock:String
+  estado:String
  }
  input RecordatorioInput{
    titulo:String
@@ -172,6 +173,7 @@ const typeDefs = gql`
   celular:String
   envio:Boolean
   stock:Int
+  estado:String
   
  }
  type Producto{

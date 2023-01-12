@@ -18,7 +18,6 @@ const querys = {
       .find({ vehiculo: id })
       .sort({ fecha: 1 })
       .toArray();
-    console.log(recordatorios);
     return recordatorios;
   },
   getOneRecordatorio: async (_, { id }, { db }) => {
@@ -61,6 +60,7 @@ const querys = {
   getUser: async (_, __, { user }) => {
     return user;
   },
+ 
 
 
   //MENSAJES
