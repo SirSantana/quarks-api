@@ -314,7 +314,7 @@ const mutations = {
 
   //COTIZACION
   createCotizacion:async (_, { input }, { db, user }) => {
-    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular, avatar:user?.avatar, nameVendedor:user?.name}
+    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
     db.collection("Preguntas").updateOne(
       {

@@ -105,7 +105,6 @@ const typeDefs = gql`
   precio:String
   envio:Boolean
   stock:String
-  avatar:String
  }
  input RecordatorioInput{
    titulo:String
@@ -173,8 +172,7 @@ const typeDefs = gql`
   celular:String
   envio:Boolean
   stock:Int
-  avatar:String
-  nameVendedor:String
+  
  }
  type Producto{
   user:ID
