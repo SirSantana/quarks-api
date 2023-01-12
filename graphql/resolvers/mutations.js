@@ -28,6 +28,23 @@ const mutations = {
     );
     return result.value;
   },
+  editVendedor: async (_, { input }, { db, user }) => {
+    if (!user) {
+      throw new Error("Authentication Error. Please sign in");
+    }
+    const result = await db.collection("User").findOneAndUpdate(
+      {
+        _id: user._id,
+      },
+      {
+        $set: input,
+      },
+      {
+        returnDocument: "after",
+      }
+    );
+    return result.value;
+  },
   signUp: async (_, { input }, { db, user }) => {
     try {
       const existUser = await db
@@ -297,8 +314,7 @@ const mutations = {
 
   //COTIZACION
   createCotizacion:async (_, { input }, { db, user }) => {
-    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular}
-    
+    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular, avatar:user?.avatar, nameVendedor:user?.name}
     await db.collection("Cotizacion").insertOne(newInput);
     db.collection("Preguntas").updateOne(
       {

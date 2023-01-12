@@ -33,6 +33,8 @@ const typeDefs = gql`
    getBusquedaPreguntas(word:String):[Pregunta]
    getCotizaciones(id:ID):[Cotizacion]
 
+   getCotizacionesUser(id:ID, limit:Int):[Cotizacion]
+   getAvatar(id:ID):User
    preguntas(limit:Int, offset:Int):[Pregunta]
  }
 
@@ -51,6 +53,8 @@ const typeDefs = gql`
    signUp(input: SignUpInput!): AuthUser
    signIn(input: SignInInput!): AuthUser
    editUser(input:UserInput!):User!
+   editVendedor(input:VendedorEditInput):User
+
 
    createVendedor(input:VendedorCreateInput):String
    
@@ -70,6 +74,15 @@ const typeDefs = gql`
    ciudad:String
    pais:String
  }
+ input VendedorEditInput{
+  name:String
+  avatar:String
+  ciudad:String
+  pais:String
+  direccion:String
+  celular:String
+  almacen:String
+}
  input PreguntaInput{
   celular:String
   user:ID
@@ -92,6 +105,7 @@ const typeDefs = gql`
   precio:String
   envio:Boolean
   stock:String
+  avatar:String
  }
  input RecordatorioInput{
    titulo:String
@@ -159,6 +173,8 @@ const typeDefs = gql`
   celular:String
   envio:Boolean
   stock:Int
+  avatar:String
+  nameVendedor:String
  }
  type Producto{
   user:ID
