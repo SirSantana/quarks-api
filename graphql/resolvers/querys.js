@@ -143,9 +143,16 @@ const querys = {
     const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
     return cotizaciones
   },
-  getCotizacionesUser:async(_,{id, limit}, {db})=>{
-    const preguntas = await db.collection('Cotizacion').find({user:ObjectId(id)}).sort({fecha:-1}).limit(limit).toArray()
-    return preguntas
+  getCotizacionesUser:async(_,{id, limit}, {user,db})=>{
+    // if(String(user?._id) === id){
+    //   const cotizaciones = user.cotizaciones
+    //   const preguntas = await db.collection('Cotizacion').find( { _id: { $in: cotizaciones } } ).sort({fecha:-1}).limit(limit).toArray()
+    //   return preguntas
+    // }else{
+      const preguntas = await db.collection('Cotizacion').find({user:ObjectId(id)}).sort({fecha:-1}).limit(limit).toArray()
+      return preguntas
+    // }
+    
   },
   getAvatar:async(_,{id}, {db})=>{
     const user = await db.collection('User').findOne({_id:ObjectId(id)})

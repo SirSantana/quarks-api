@@ -9,7 +9,7 @@ const { getTemplate2, sendMail } = require('../../libs/mail');
 const getToken=(user)=> jwt.sign({id:user?._id}, process.env.JWT_TOKEN)
 
 const mutations = {
-
+ 
     //USER/REGISTER/LOGIN
   editUser: async (_, { input }, { db, user }) => {
     if (!user) {
@@ -316,7 +316,9 @@ const mutations = {
   createCotizacion:async (_, { input }, { db, user }) => {
     const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
-    db.collection("Preguntas").updateOne(
+
+    //VERIFICAR SI CON EL AWAIT FUNCIONA, HACER 20 PRUEBAS DE COTIZACIONES A LAS 5AM
+     db.collection("Preguntas").updateOne(
       {
         _id: ObjectId(input.pregunta),
       },
@@ -326,7 +328,7 @@ const mutations = {
         },
       }
     )
-    db.collection("User").updateOne(
+    await db.collection("User").updateOne(
       {
         _id: ObjectId(user._id),
       },

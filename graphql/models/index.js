@@ -65,6 +65,7 @@ const typeDefs = gql`
 
    createPregunta(input:PreguntaInput):Pregunta
    createCotizacion(input:CotizacionInput):Cotizacion
+
  }
  
  input UserInput{
@@ -74,6 +75,7 @@ const typeDefs = gql`
    ciudad:String
    pais:String
  }
+ 
  input VendedorEditInput{
   name:String
   avatar:String
