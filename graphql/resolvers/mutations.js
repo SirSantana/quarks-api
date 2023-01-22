@@ -373,33 +373,6 @@ const mutations = {
     }
 
   },
-  uploadFile: async (_, { file }, { db }) => {
-    const azureAccount = 'azurequarks'
-    const key = '64EovkafQS0SLECALgOM5LHI6dJpXgNdRtwngQnOdhWkNuidHFhOm6ZhYrxfvqcTUoKfUP0xEcSE+AStd91leA=='
-    const sharedKeyCredential = new StorageSharedKeyCredential(azureAccount, key);
-    const blobServiceClient = new BlobServiceClient(
-      `https://${azureAccount}.blob.core.windows.net`,
-      sharedKeyCredential
-    );
-    // Get a container client
-    const containerClient = blobServiceClient.getContainerClient('avatares');
-    let nameFile = new Date().getTime()
-
-
-    var matches = file.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-    var type = matches[1];
-    var buffer = Buffer.from(matches[2], "base64");
-    var uploadOptions = {
-      container: 'avatares',
-      blob: 'imageprueba',
-      text: buffer
-    }
-    const blockBlobClient = containerClient.getBlockBlobClient(String(nameFile));
-
-    blockBlobClient.upload(buffer, buffer.byteLength, { blobHTTPHeaders: { blobContentType: "image/jpeg" } })
-    console.log('ready');
-
-
-  }
+  
 };
 module.exports = mutations
