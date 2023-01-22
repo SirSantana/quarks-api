@@ -2,6 +2,7 @@ const { StorageSharedKeyCredential, BlobServiceClient } = require("@azure/storag
 
 
 async function AzureUpload({container, file, nameFile}){
+    console.log(file);
     const azureAccount = process.env.AZURE_ACCOUNT
     const key = process.env.AZURE_KEY
     const sharedKeyCredential = new StorageSharedKeyCredential(azureAccount, key);
