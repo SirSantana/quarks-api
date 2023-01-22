@@ -46,7 +46,6 @@ const start= async()=>{
     let stats = db.stats();
     totalIndexSize += (stats.then(res=> console.log(res.indexSize /(1024*1024*1024)) )) ;
     totalDataSize += (stats.then(res=> console.log(res.dataSize /(1024*1024*1024)))) ;
-
     const server = new ApolloServer({ 
         typeDefs, 
         resolvers: {
@@ -54,7 +53,7 @@ const start= async()=>{
           Date: dateScalar,
         },
         debug:true,
-        // introspection:false,
+        introspection:false,
         context: 
         // async ({ req }) => {
         //   console.log('req',req.headers.authorization);

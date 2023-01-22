@@ -2,15 +2,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const { ObjectId } = require("mongodb");
 const { getTemplate2, sendMail } = require('../../libs/mail');
+const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
+const AzureUpload = require('../../libs/azureUpload');
 
 
-
-
-const getToken=(user)=> jwt.sign({id:user?._id}, process.env.JWT_TOKEN)
+const getToken = (user) => jwt.sign({ id: user?._id }, process.env.JWT_TOKEN)
 
 const mutations = {
- 
-    //USER/REGISTER/LOGIN
+
+  //USER/REGISTER/LOGIN
   editUser: async (_, { input }, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
@@ -84,7 +84,7 @@ const mutations = {
     if (!user || !isPasswordCorrect) {
       throw new Error("Datos Invalidos. Revisa tu Correo y Contraseña");
     }
-    if(user.role === 'Vendedor' && user?.verified === false){
+    if (user.role === 'Vendedor' && user?.verified === false) {
       return new Error("Estamos validando tu cuenta");
     }
 
@@ -93,11 +93,11 @@ const mutations = {
       token: getToken(user),
     };
   },
-  sendMessagePassword:async(_,{email, codigo},{db})=>{
+  sendMessagePassword: async (_, { email, codigo }, { db }) => {
 
-   const template = getTemplate2(codigo);
-   const user = await db.collection("User").findOne({ email: email });
-    if(!user){
+    const template = getTemplate2(codigo);
+    const user = await db.collection("User").findOne({ email: email });
+    if (!user) {
       throw new Error("Correo no registrado");
     }
     let mailOptions = {
@@ -107,13 +107,13 @@ const mutations = {
       text: "Cambio de contraseña",
       htmL: null,
     };
-     await sendMail(mailOptions, template);
+    await sendMail(mailOptions, template);
     return 'true'
 
   },
-  changePassword:async(_,{email, password, confirmPassword},{db})=>{
-    
-    
+  changePassword: async (_, { email, password, confirmPassword }, { db }) => {
+
+
     const user = await db.collection("User").findOne({ email: email });
     const hashedPassword = bcrypt.hashSync(password);
 
@@ -126,17 +126,17 @@ const mutations = {
       },
       {
         $set: {
-          password:hashedPassword
+          password: hashedPassword
         },
       },
       {
         returnDocument: "after",
       }
     );
-    return result.ok 
+    return result.ok
   },
-  
-    //CAR
+
+  //CAR
   createCar: async (_, { input }, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
@@ -176,7 +176,7 @@ const mutations = {
     return result.value;
   },
 
-    //GASTO
+  //GASTO
   createGasto: async (_, { input }, { db, user }) => {
     const { fecha, tipo, dineroGastado } = input;
     if (tipo.length === 0) {
@@ -248,12 +248,12 @@ const mutations = {
     }
   },
 
-    //RECORDATORIO
+  //RECORDATORIO
   createRecordatorio: async (_, { input }, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-    console.log('inpu',input);
+    console.log('inpu', input);
     const newRecordatorio = { ...input };
     await db.collection("Recordatorio").insertOne(newRecordatorio);
     db.collection("Vehicule").updateOne(
@@ -286,7 +286,7 @@ const mutations = {
     }
   },
 
-    //MENSAJE
+  //MENSAJE
   createMensaje: async (_, { input }, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
@@ -302,23 +302,34 @@ const mutations = {
 
     return newMensaje;
   },
-  
+
 
   //PREGUNTA
-  createPregunta:async (_, { input }, { db }) => {
-    const newInput = {...input, fecha:new Date(), titulo:input.titulo +" de " +  input.referencia}
+  createPregunta: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia }
+    if (input?.imagen) {
+      let container = process.env.AZURE_CONTAINER_PARTS
+      let nameFile = new Date().getTime()
+      await AzureUpload({container, file:input.imagen,nameFile})
+      const newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      await db
+        .collection("Preguntas")
+        .insertOne(newInputImage)
+    } else {
       const res = await db
-      .collection("Preguntas")
-      .insertOne(newInput)
+        .collection("Preguntas")
+        .insertOne(newInput)
+    }
+
   },
 
   //COTIZACION
-  createCotizacion:async (_, { input }, { db, user }) => {
-    const newInput = {...input, fecha:new Date(), pregunta:ObjectId(input.pregunta), user:user._id, celular:user?.celular, }
+  createCotizacion: async (_, { input }, { db, user }) => {
+    const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
 
     //VERIFICAR SI CON EL AWAIT FUNCIONA, HACER 20 PRUEBAS DE COTIZACIONES A LAS 5AM
-     db.collection("Preguntas").updateOne(
+    db.collection("Preguntas").updateOne(
       {
         _id: ObjectId(input.pregunta),
       },
@@ -338,7 +349,7 @@ const mutations = {
         },
       }
     )
-    
+
     return newInput
   },
   // VENDEDOR
@@ -356,11 +367,39 @@ const mutations = {
       };
       // save to database
       await db.collection("User").insertOne(newVendedor);
-      
+
     } catch (error) {
       return new Error(error);
     }
-    
+
   },
+  uploadFile: async (_, { file }, { db }) => {
+    const azureAccount = 'azurequarks'
+    const key = '64EovkafQS0SLECALgOM5LHI6dJpXgNdRtwngQnOdhWkNuidHFhOm6ZhYrxfvqcTUoKfUP0xEcSE+AStd91leA=='
+    const sharedKeyCredential = new StorageSharedKeyCredential(azureAccount, key);
+    const blobServiceClient = new BlobServiceClient(
+      `https://${azureAccount}.blob.core.windows.net`,
+      sharedKeyCredential
+    );
+    // Get a container client
+    const containerClient = blobServiceClient.getContainerClient('avatares');
+    let nameFile = new Date().getTime()
+
+
+    var matches = file.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    var type = matches[1];
+    var buffer = Buffer.from(matches[2], "base64");
+    var uploadOptions = {
+      container: 'avatares',
+      blob: 'imageprueba',
+      text: buffer
+    }
+    const blockBlobClient = containerClient.getBlockBlobClient(String(nameFile));
+
+    blockBlobClient.upload(buffer, buffer.byteLength, { blobHTTPHeaders: { blobContentType: "image/jpeg" } })
+    console.log('ready');
+
+
+  }
 };
 module.exports = mutations
