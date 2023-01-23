@@ -30,20 +30,41 @@ const mutations = {
   },
   editVendedor: async (_, { input }, { db, user }) => {
     if (!user) {
-      throw new Error("Authentication Error. Please sign in");
+      return new Error("Authentication Error. Please sign in");
     }
-    const result = await db.collection("User").findOneAndUpdate(
-      {
-        _id: user._id,
-      },
-      {
-        $set: input,
-      },
-      {
-        returnDocument: "after",
-      }
-    );
-    return result.value;
+    if (input?.avatar) {
+      let container = process.env.AZURE_CONTAINER_IMGPROFILE
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.avatar, nameFile })
+      const newInputImage = await { ...input, avatar: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      const result = await db.collection("User").findOneAndUpdate(
+        {
+          _id: user._id,
+        },
+        {
+          $set: newInputImage,
+        },
+        {
+          returnDocument: "after",
+        }
+      )
+      return result.value;
+
+    } else {
+      const result = await db.collection("User").findOneAndUpdate(
+        {
+          _id: user._id,
+        },
+        {
+          $set: input,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+      return result.value;
+    }
+
   },
   signUp: async (_, { input }, { db, user }) => {
     try {
@@ -310,7 +331,7 @@ const mutations = {
     if (input?.imagen) {
       let container = process.env.AZURE_CONTAINER_PARTS
       let nameFile = new Date().getTime()
-      await AzureUpload({container, file:input.imagen,nameFile})
+      await AzureUpload({ container, file: input.imagen, nameFile })
       const newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
       await db
         .collection("Preguntas")
@@ -373,6 +394,6 @@ const mutations = {
     }
 
   },
-  
+
 };
 module.exports = mutations
