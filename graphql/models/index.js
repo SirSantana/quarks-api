@@ -66,7 +66,6 @@ const typeDefs = gql`
    createPregunta(input:PreguntaInput):Pregunta
    createCotizacion(input:CotizacionInput):Cotizacion
 
-
    uploadFile(file:String):String
  }
  

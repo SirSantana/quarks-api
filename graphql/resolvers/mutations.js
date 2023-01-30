@@ -98,7 +98,6 @@ const mutations = {
     }
   },
   signIn: async (_, { input }, { db }) => {
-    console.log(input);
     const user = await db.collection("User").findOne({ email: input.email });
     const isPasswordCorrect =
       user && bcrypt.compareSync(input.password, user.password);
