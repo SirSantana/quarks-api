@@ -162,20 +162,42 @@ const mutations = {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-
-    const newCar = { ...input, user: user._id };
-    await db.collection("Vehicule").insertOne(newCar);
-    db.collection("User").updateOne(
-      {
-        _id: ObjectId(user._id),
-      },
-      {
-        $push: {
-          vehiculos: newCar._id,
+    let newInputImage;
+    if (input?.imagen) {
+      console.log('hola');
+      let container = process.env.AZURE_CONTAINER_CARS
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.imagen, nameFile })
+      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}`, user: user._id }
+      await db.collection("Vehicule").insertOne(newInputImage);
+      db.collection("User").updateOne(
+        {
+          _id: ObjectId(user._id),
         },
-      }
-    );
-    return newCar;
+        {
+          $push: {
+            vehiculos: newInputImage._id,
+          },
+        }
+      );
+      return newInputImage;
+    } else {
+      const newCar = { ...input, user: user._id };
+      await db.collection("Vehicule").insertOne(newCar);
+      db.collection("User").updateOne(
+        {
+          _id: ObjectId(user._id),
+        },
+        {
+          $push: {
+            vehiculos: newCar._id,
+          },
+        }
+      );
+      return newCar;
+    }
+
+
   },
   updateCar: async (_, data, { db, user }) => {
     if (!user) {
@@ -200,6 +222,7 @@ const mutations = {
   //GASTO
   createGasto: async (_, { input }, { db, user }) => {
     const { fecha, tipo, dineroGastado } = input;
+    console.log(input);
     if (tipo.length === 0) {
       input.tipo = "Tanqueada";
     }

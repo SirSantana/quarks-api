@@ -43,7 +43,6 @@ const querys = {
       .collection("Gasto")
       .find({ vehiculo: id })
       .sort({ fecha: -1 })
-      .limit(20)
       .toArray();
     return res.reverse();
   },
