@@ -49,7 +49,6 @@ const mutations = {
         }
       )
       return result.value;
-
     } else {
       const result = await db.collection("User").findOneAndUpdate(
         {
@@ -79,9 +78,9 @@ const mutations = {
       const newUser = {
         email: input.email,
         name: input.name,
-        apellido: input.apellido,
         role: "Cliente",
         password: hashedPassword,
+        puntos: 100
       };
       // save to database
       await db.collection("User").insertOne(newUser);
@@ -93,7 +92,6 @@ const mutations = {
         token: getToken(user),
       };
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   },
@@ -107,14 +105,12 @@ const mutations = {
     if (user.role === 'Vendedor' && user?.verified === false) {
       return new Error("Estamos validando tu cuenta");
     }
-
     return {
       user,
       token: getToken(user),
     };
   },
   sendMessagePassword: async (_, { email, codigo }, { db }) => {
-
     const template = getTemplate2(codigo);
     const user = await db.collection("User").findOne({ email: email });
     if (!user) {
@@ -132,11 +128,8 @@ const mutations = {
 
   },
   changePassword: async (_, { email, password, confirmPassword }, { db }) => {
-
-
     const user = await db.collection("User").findOne({ email: email });
     const hashedPassword = bcrypt.hashSync(password);
-
     if (!user) {
       throw new Error("Correo no registrado");
     }
@@ -163,17 +156,17 @@ const mutations = {
     }
     let newInputImage;
     if (input?.imagen) {
-      console.log('hola');
       let container = process.env.AZURE_CONTAINER_CARS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
-      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}`, user: user._id }
+      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}`, user: user._id,tipo:'Carro'}
       await db.collection("Vehicule").insertOne(newInputImage);
       db.collection("User").updateOne(
         {
           _id: ObjectId(user._id),
         },
         {
+          $set: { puntos: user?.puntos ? user?.puntos + 50 : 0 + 50 },
           $push: {
             vehiculos: newInputImage._id,
           },
@@ -181,13 +174,14 @@ const mutations = {
       );
       return newInputImage;
     } else {
-      const newCar = { ...input, user: user._id };
+      const newCar = { ...input, user: user._id, tipo:'Carro' };
       await db.collection("Vehicule").insertOne(newCar);
       db.collection("User").updateOne(
         {
           _id: ObjectId(user._id),
         },
         {
+          $set: { puntos: user?.puntos ? user?.puntos + 50 : 0 + 50 },
           $push: {
             vehiculos: newCar._id,
           },
@@ -198,43 +192,83 @@ const mutations = {
 
 
   },
-  updateCar: async (_, data, { db, user }) => {
+  updateCar: async (_, {input}, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-    const { input } = data;
-    const result = await db.collection("Vehicule").findOneAndUpdate(
-      {
-        _id: ObjectId(input.id),
-      },
-      {
-        $set: input,
-      },
-      {
-        returnDocument: "after",
-      }
-    );
-    //  const res = await db.collection('Vehicule').findOne({ _id: ObjectId(input.id) });
-    return result.value;
+    let newInputImage;
+    if (input?.imagen) {
+      let container = process.env.AZURE_CONTAINER_CARS
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.imagen, nameFile })
+      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      const result = await db.collection("Vehicule").findOneAndUpdate(
+        {
+          _id: ObjectId(input.id),
+        },
+        {
+          $set: newInputImage,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+      return result.value;
+    } else {
+      const result = await db.collection("Vehicule").findOneAndUpdate(
+        {
+          _id: ObjectId(input.id),
+        },
+        {
+          $set: input,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+      return result.value;
+    }
+  },
+  deleteCar: async (_, { id }, { db, user }) => {
+    if (!user) {
+      throw new Error("Authentication Error. Please sign in");
+    }
+    try {
+      await db.collection("Vehicule").deleteOne({ _id: ObjectId(id) });
+      await db
+        .collection("User")
+        .updateOne(
+          { _id: ObjectId(user?._id) },
+          { $pull: { vehiculos: ObjectId(id) } }
+        );
+      return id;
+    } catch (error) {
+      throw new Error("Ha ocurrido un error");
+    }
   },
 
   //GASTO
   createGasto: async (_, { input }, { db, user }) => {
     const { fecha, tipo, dineroGastado } = input;
-    console.log(input);
     if (tipo.length === 0) {
       input.tipo = "Tanqueada";
     }
     if (fecha == "Invalid Date") {
       input.fecha = new Date();
     }
-    const newInput = {
+    let newInput = {
       ...input,
       dineroGastado: input.dineroGastado.replace(/[^0-9]/g, ""),
     };
 
     if (dineroGastado.length === 0) {
       throw new Error("Debes agregar fecha, tipo y dinero gastado");
+    }
+    if(input.imagen){
+      let container = process.env.AZURE_CONTAINER_GASTOS
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.imagen, nameFile })
+      newInput = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
     }
     const res = await db
       .collection("Gasto")
@@ -252,6 +286,14 @@ const mutations = {
         },
       }
     );
+    db.collection("User").updateOne(
+      {
+        _id: ObjectId(user._id),
+      },
+      {
+        $set: { puntos: user?.puntos +2},
+      }
+    );
     return res;
   },
   updateGasto: async (_, data, { db, user }) => {
@@ -259,19 +301,38 @@ const mutations = {
       throw new Error("Authentication Error. Please sign in");
     }
     const { input } = data;
+    let newInput;
+    if(input.imagen){
+      let container = process.env.AZURE_CONTAINER_GASTOS
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.imagen, nameFile })
+      newInput = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+    }
     const result = await db.collection("Gasto").findOneAndUpdate(
       {
         _id: ObjectId(input.id),
       },
       {
-        $set: input,
+        $set: newInput ? newInput: input,
       },
       {
         returnDocument: "after",
       }
     );
-    //  const res = await db.collection('Vehicule').findOne({ _id: ObjectId(input.id) });
     return result.value;
+  },
+  createPresupuesto: async (_, { id, presupuesto }, { db, user }) => {
+    if (!user) {
+      throw new Error("Authentication Error. Please sign in");
+    }
+    db.collection("Vehicule").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $set: { presupuesto: presupuesto},
+      }
+    )
   },
   deleteGasto: async (_, { id, idVehiculo }, { db, user }) => {
     if (!user) {
@@ -296,7 +357,6 @@ const mutations = {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-    console.log('inpu', input);
     const newRecordatorio = { ...input };
     await db.collection("Recordatorio").insertOne(newRecordatorio);
     db.collection("Vehicule").updateOne(
@@ -310,6 +370,24 @@ const mutations = {
       }
     );
     return newRecordatorio;
+  },
+  editRecordatorio: async (_, { input }, { db, user }) => {
+    if (!user) {
+      throw new Error("Authentication Error. Please sign in");
+    }
+    const result = await db.collection("Recordatorio").findOneAndUpdate(
+      {
+        _id: ObjectId(input.id),
+      },
+      {
+        $set: input,
+      },
+      {
+        returnDocument: "after",
+      }
+    );
+
+    return result.value;
   },
   deleteRecordatorio: async (_, { id }, { db, user }) => {
     if (!user) {
@@ -334,7 +412,6 @@ const mutations = {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
-
     const newMensaje = {
       ...input,
       user: user?._id,
@@ -348,8 +425,9 @@ const mutations = {
 
 
   //PREGUNTA
-  createPregunta: async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia }
+  createPregunta: async (_, { input }, { db, user }) => {
+    const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia,user: user?._id ? ObjectId(user?._id): '' }
+    
     if (input?.imagen) {
       let container = process.env.AZURE_CONTAINER_PARTS
       let nameFile = new Date().getTime()
@@ -363,7 +441,19 @@ const mutations = {
         .collection("Preguntas")
         .insertOne(newInput)
     }
-
+    if(user){
+      db.collection("User").updateOne(
+        {
+          _id: ObjectId(user._id),
+        },
+        {
+          $set: { puntos: user?.puntos +2},
+          $push: {
+            preguntas: newInput._id,
+          },
+        }
+      );
+    }
   },
 
   //COTIZACION
@@ -371,7 +461,6 @@ const mutations = {
     const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
 
-    //VERIFICAR SI CON EL AWAIT FUNCIONA, HACER 20 PRUEBAS DE COTIZACIONES A LAS 5AM
     db.collection("Preguntas").updateOne(
       {
         _id: ObjectId(input.pregunta),
@@ -392,7 +481,6 @@ const mutations = {
         },
       }
     )
-
     return newInput
   },
   // VENDEDOR
@@ -408,13 +496,10 @@ const mutations = {
         password: hashedPassword,
         role: "Vendedor",
       };
-      // save to database
       await db.collection("User").insertOne(newVendedor);
-
     } catch (error) {
       return new Error(error);
     }
-
   },
 
 };

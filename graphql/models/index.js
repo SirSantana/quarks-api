@@ -12,6 +12,7 @@ const typeDefs = gql`
    getPrevGastos(id:ID):[Gasto]
    getAllGastos(id:ID):[Gasto]
    getOneGasto(id:ID):Gasto
+   getGastosMonth(id:ID):[Gasto]
 
    getUser:User!
    getOneUser(id:ID):User
@@ -29,6 +30,9 @@ const typeDefs = gql`
    getOneProducto(id:ID):Producto
 
    getPreguntas(limit:Int,marca:String):[Pregunta]
+   getLastPreguntas:[Pregunta]
+   getPreguntasUser:[Pregunta]
+
    getOnePregunta(id:ID):Pregunta
    getBusquedaPreguntas(word:String):[Pregunta]
    getCotizaciones(id:ID):[Cotizacion]
@@ -42,12 +46,16 @@ const typeDefs = gql`
  type Mutation {
    createCar(input:CreateVehiculeInput!):Vehicule
    updateCar(input:CreateVehiculeInput!):Vehicule
+   deleteCar(id:ID!):String
+
 
    createGasto(input:CreateGastoInput!):Gasto
    updateGasto(input:CreateGastoInput!):Gasto
    deleteGasto(id:ID!, idVehiculo:ID!):String
+   createPresupuesto(id:ID!,presupuesto:String):Vehicule
 
-   createRecordatorio(input:RecordatorioInput!):Recordatorio
+   createRecordatorio(input:RecordatorioInput):Recordatorio
+   editRecordatorio(input:RecordatorioInput):Recordatorio
    deleteRecordatorio(id:ID!):String
 
    signUp(input: SignUpInput!): AuthUser
@@ -112,10 +120,13 @@ const typeDefs = gql`
   estado:String
  }
  input RecordatorioInput{
-   titulo:String
-   description:String
-   fecha:Date
+   tipo:String
+   fechaInicial:Date
+   fechaFinal:Date
+   kilometrajeInicial:String
+   kilometrajeFinal:String
    vehiculo:ID
+   id:ID
  }
  input MensajeInput{
    texto:String
@@ -128,7 +139,6 @@ const typeDefs = gql`
    email: String!
    password: String!
    name: String!
-   apellido:String!
    confirmPassword:String
  }
  input CreateGastoInput{
@@ -217,11 +227,13 @@ const typeDefs = gql`
    avatar:String
  }
  type Recordatorio{
-   titulo:String
-   description:String
-   fecha:Date
+   tipo:String
+   fechaInicial:Date
+   fechaFinal:Date
    id:ID
    vehiculo:ID
+   kilometrajeInicial:String
+   kilometrajeFinal:String
  }
 
  input CreateVehiculeInput{
@@ -267,11 +279,15 @@ const typeDefs = gql`
    vehiculos:[ID]
    recordatorio:[ID]
    cotizaciones:[ID]
+   preguntas:[ID]
    verified:Boolean
    marcas:[String]
    celular:String
    direccion:String
    almacen:String
+   puntos:Int
+   premium:Int
+
  }
  type Vehicule{
    tipo:String
@@ -283,6 +299,7 @@ const typeDefs = gql`
    user:ID
    id:ID
    gastos:[ID]
+   presupuesto:String
  }
 
 
