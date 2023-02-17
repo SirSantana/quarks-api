@@ -14,6 +14,7 @@ const typeDefs = gql`
    getOneGasto(id:ID):Gasto
    getGastosMonth(id:ID):[Gasto]
 
+   
    getUser:User!
    getOneUser(id:ID):User
    
