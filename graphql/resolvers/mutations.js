@@ -502,5 +502,19 @@ const mutations = {
     }
   },
 
+
+  userRecurrent:async(_, __, {db, user})=>{
+    await db.collection("User").updateOne(
+      {
+        _id: ObjectId(user._id),
+      },
+      {
+        $push: {
+          recurrent: new Date().toLocaleString(),
+        },
+      }
+    )
+  }
+
 };
 module.exports = mutations

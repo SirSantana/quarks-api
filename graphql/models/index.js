@@ -76,6 +76,8 @@ const typeDefs = gql`
    createCotizacion(input:CotizacionInput):Cotizacion
 
    uploadFile(file:String):String
+
+   userRecurrent:String
  }
  
  
@@ -288,6 +290,7 @@ const typeDefs = gql`
    almacen:String
    puntos:Int
    premium:Int
+   recurrent:[Date]
 
  }
  type Vehicule{
