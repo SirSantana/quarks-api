@@ -148,7 +148,7 @@ const querys = {
     const idsPreguntas = user?.preguntas
     if (!idsPreguntas) throw new Error('No has realizado ninguna cotizacion aún, crea una')
     const preguntas = await db.collection('Preguntas').find({ _id: { $in: idsPreguntas } }).toArray()
-    return preguntas
+    return preguntas.reverse()
 
   },
 

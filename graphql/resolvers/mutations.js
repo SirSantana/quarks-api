@@ -427,13 +427,13 @@ const mutations = {
   //PREGUNTA
   createPregunta: async (_, { input }, { db, user }) => {
     const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia,user: user?._id ? ObjectId(user?._id): '' }
-    
+    let newInputImage;
     if (input?.imagen) {
       let container = process.env.AZURE_CONTAINER_PARTS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
-      const newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
-      await db
+       newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      const res = await db
         .collection("Preguntas")
         .insertOne(newInputImage)
     } else {
@@ -449,7 +449,7 @@ const mutations = {
         {
           $set: { puntos: user?.puntos +2},
           $push: {
-            preguntas: newInput._id,
+            preguntas: newInput._id ? newInput._id : newInputImage._id,
           },
         }
       );
