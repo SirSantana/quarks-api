@@ -291,7 +291,7 @@ const mutations = {
         _id: ObjectId(user._id),
       },
       {
-        $set: { puntos: user?.puntos ? user?.puntos + 50 : 0 + 50 },
+        $set: { puntos: user?.puntos && user?.puntos + 2 },
       }
     );
     return res;
