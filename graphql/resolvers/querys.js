@@ -163,7 +163,6 @@ const querys = {
       .sort({ score: { $meta: "textScore" } })
       .limit(8)
       .toArray()
-
     return pregunta2
   },
 
