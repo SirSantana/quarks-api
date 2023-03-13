@@ -68,13 +68,14 @@ const typeDefs = gql`
    createVendedor(input:VendedorCreateInput):String
    
    sendMessagePassword(email:String, codigo:Int):String
-   changePassword(email:String,password:String, confirmPassword:String):String
+   changePassword(email:String,password:String, previusPassword:String):String
 
    createMensaje(input:MensajeInput!):Mensaje
 
    createPregunta(input:PreguntaInput):Pregunta
    createCotizacion(input:CotizacionInput):Cotizacion
 
+   contactoEmail(name:String, email:String, mensaje:String):String
    uploadFile(file:String):String
 
    userRecurrent:String

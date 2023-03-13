@@ -127,15 +127,20 @@ const mutations = {
     return 'true'
 
   },
-  changePassword: async (_, { email, password, confirmPassword }, { db }) => {
-    const user = await db.collection("User").findOne({ email: email });
-    const hashedPassword = bcrypt.hashSync(password);
+  changePassword: async (_, { email, password, previusPassword }, { db, user }) => {
+    console.log('Hola');
+    console.log(email,password, previusPassword);
     if (!user) {
-      throw new Error("Correo no registrado");
+      return new Error("Authentication Error. Please sign in");
     }
+    const isValid = await bcrypt.compare(previusPassword, user?.password)
+    if (!isValid) {
+      return new Error("Contraseña anterior invalida");
+    }
+    const hashedPassword = bcrypt.hashSync(password);
     const result = await db.collection("User").findOneAndUpdate(
       {
-        email: email,
+        email: user?.email,
       },
       {
         $set: {
@@ -458,6 +463,9 @@ const mutations = {
 
   //COTIZACION
   createCotizacion: async (_, { input }, { db, user }) => {
+    if(user?.role !== 'Vendedor'){
+      throw new Error("No tienes permiso para cotizar");
+    }
     const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
 
@@ -514,7 +522,11 @@ const mutations = {
         },
       }
     )
+  },
+  contactoEmail:async(_,{name, email, mensaje}, {db, user})=>{
+    console.log(name, email, mensaje);
   }
+
 
 };
 module.exports = mutations
