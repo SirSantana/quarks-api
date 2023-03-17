@@ -525,7 +525,36 @@ const mutations = {
   },
   contactoEmail:async(_,{name, email, mensaje}, {db, user})=>{
     console.log(name, email, mensaje);
-  }
+  },
+
+
+  createVote:async(_,{id, idCarro}, {db})=>{
+
+    const votos = await db.collection("Batallas").findOne({_id:ObjectId(id)})
+    if(votos.carroUnoId == idCarro){
+      db.collection("Batallas").updateOne(
+        {
+          _id: ObjectId(id),
+        },
+        {
+          $set: { carroUnoVotos: votos.carroUnoVotos + 1 },
+        }
+      );
+    }else{
+      db.collection("Batallas").updateOne(
+        {
+          _id: ObjectId(id),
+        },
+        {
+          $set: { carroDosVotos: votos.carroDosVotos + 1 },
+
+        }
+      );
+    }
+
+    
+
+  },
 
 
 };

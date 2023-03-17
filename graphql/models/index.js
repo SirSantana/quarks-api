@@ -41,6 +41,9 @@ const typeDefs = gql`
    getCotizacionesUser(id:ID, limit:Int):[Cotizacion]
    getAvatar(id:ID):User
    preguntas(limit:Int, offset:Int):[Pregunta]
+
+
+   getBatallas:[Batalla]
  }
 
 
@@ -79,6 +82,8 @@ const typeDefs = gql`
    uploadFile(file:String):String
 
    userRecurrent:String
+
+   createVote(id:String, idCarro:String):String
  }
  
  
@@ -164,6 +169,17 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Batalla{
+  id:ID
+  carroUno:String
+  carroDos:String
+  carroUnoId:String
+  carroDosId:String
+  carroUnoVotos:Int
+  carroDosVotos:Int
+  carroUnoImg:String
+  carroDosImg:String
  }
  type Pregunta{
   marca:String

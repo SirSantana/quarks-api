@@ -32,6 +32,9 @@ const querys = require('./querys');
     },
     Cotizacion:{
       id: ({ _id, id }) => _id || id,
+    },
+    Batalla:{
+      id: ({ _id, id }) => _id || id,
     }
   
   

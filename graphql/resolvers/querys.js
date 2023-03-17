@@ -179,6 +179,13 @@ const querys = {
     const user = await db.collection('User').findOne({ _id: ObjectId(id) })
     return user
   },
+
+
+  getBatallas:async(_,{},{db})=>{
+    const batallas = await db.collection('Batallas').find().toArray()
+    console.log(batallas);
+    return batallas
+  }
 };
 
 module.exports = querys;
