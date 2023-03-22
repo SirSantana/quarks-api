@@ -463,7 +463,7 @@ const mutations = {
 
   //COTIZACION
   createCotizacion: async (_, { input }, { db, user }) => {
-    if(user?.role !== 'Vendedor'){
+    if(user?.role !== 'Vendedor'|| user?.role !== 'Admin'){
       throw new Error("No tienes permiso para cotizar");
     }
     const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
