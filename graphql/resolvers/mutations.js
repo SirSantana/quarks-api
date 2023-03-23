@@ -129,7 +129,7 @@ const mutations = {
   },
   changePassword: async (_, { email, password, previusPassword }, { db, user }) => {
     console.log('Hola');
-    console.log(email,password, previusPassword);
+    console.log(email, password, previusPassword);
     if (!user) {
       return new Error("Authentication Error. Please sign in");
     }
@@ -164,7 +164,7 @@ const mutations = {
       let container = process.env.AZURE_CONTAINER_CARS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
-      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}`, user: user._id,tipo:'Carro'}
+      newInputImage = await { ...input, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}`, user: user._id, tipo: 'Carro' }
       await db.collection("Vehicule").insertOne(newInputImage);
       db.collection("User").updateOne(
         {
@@ -179,7 +179,7 @@ const mutations = {
       );
       return newInputImage;
     } else {
-      const newCar = { ...input, user: user._id, tipo:'Carro' };
+      const newCar = { ...input, user: user._id, tipo: 'Carro' };
       await db.collection("Vehicule").insertOne(newCar);
       db.collection("User").updateOne(
         {
@@ -197,7 +197,7 @@ const mutations = {
 
 
   },
-  updateCar: async (_, {input}, { db, user }) => {
+  updateCar: async (_, { input }, { db, user }) => {
     if (!user) {
       throw new Error("Authentication Error. Please sign in");
     }
@@ -269,7 +269,7 @@ const mutations = {
     if (dineroGastado.length === 0) {
       throw new Error("Debes agregar fecha, tipo y dinero gastado");
     }
-    if(input.imagen){
+    if (input.imagen) {
       let container = process.env.AZURE_CONTAINER_GASTOS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
@@ -307,7 +307,7 @@ const mutations = {
     }
     const { input } = data;
     let newInput;
-    if(input.imagen){
+    if (input.imagen) {
       let container = process.env.AZURE_CONTAINER_GASTOS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
@@ -318,7 +318,7 @@ const mutations = {
         _id: ObjectId(input.id),
       },
       {
-        $set: newInput ? newInput: input,
+        $set: newInput ? newInput : input,
       },
       {
         returnDocument: "after",
@@ -335,7 +335,7 @@ const mutations = {
         _id: ObjectId(id),
       },
       {
-        $set: { presupuesto: presupuesto},
+        $set: { presupuesto: presupuesto },
       }
     )
   },
@@ -430,40 +430,54 @@ const mutations = {
 
 
   //PREGUNTA
-  createPregunta: async (_, { input }, { db, user }) => {
-    const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia,user: user?._id ? ObjectId(user?._id): '' }
+  createPregunta: async (_, { input }, { db, user, clientWha }) => {
+    const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia, user: user?._id ? ObjectId(user?._id) : '' }
     let newInputImage;
+    console.log(newInput);
+    let res;
     if (input?.imagen) {
       let container = process.env.AZURE_CONTAINER_PARTS
       let nameFile = new Date().getTime()
       await AzureUpload({ container, file: input.imagen, nameFile })
-       newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
-      const res = await db
+      newInputImage = await { ...newInput, imagen: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      res = await db
         .collection("Preguntas")
         .insertOne(newInputImage)
     } else {
-      const res = await db
+      res = await db
         .collection("Preguntas")
         .insertOne(newInput)
+
     }
-    if(user){
+    if (res) {
+      let arrayVendedores = ['573114754394','573143551942']
+      let url = `quarks.com.co/cotizaciones/${res.insertedId}-${newInput?.titulo.split(" ").join('-')}`
+      let frase = `😁 Haz recibido una cotizacion! \n🚘 ${newInput?.titulo} \n✍️ Cotiza en el siguiente link: \n` + url
+      for (let i = 0; i < arrayVendedores.length; i++) {
+        clientWha.sendMessage(`${arrayVendedores[i]}@c.us`, frase).then(res => console.log('res', res)).catch(err => console.log('err', err))
+
+      }
+    }
+    if (user) {
       db.collection("User").updateOne(
         {
           _id: ObjectId(user._id),
         },
         {
-          $set: { puntos: user?.puntos +2},
+          $set: { puntos: user?.puntos + 2 },
           $push: {
             preguntas: newInput._id ? newInput._id : newInputImage._id,
           },
         }
       );
     }
+
+
   },
 
   //COTIZACION
   createCotizacion: async (_, { input }, { db, user }) => {
-    if(user?.role !== 'Vendedor'){
+    if (user?.role !== 'Vendedor') {
       throw new Error("No tienes permiso para cotizar");
     }
     const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
@@ -511,7 +525,7 @@ const mutations = {
   },
 
 
-  userRecurrent:async(_, __, {db, user})=>{
+  userRecurrent: async (_, __, { db, user }) => {
     await db.collection("User").updateOne(
       {
         _id: ObjectId(user._id),
@@ -523,15 +537,15 @@ const mutations = {
       }
     )
   },
-  contactoEmail:async(_,{name, email, mensaje}, {db, user})=>{
+  contactoEmail: async (_, { name, email, mensaje }, { db, user }) => {
     console.log(name, email, mensaje);
   },
 
 
-  createVote:async(_,{id, idCarro}, {db})=>{
+  createVote: async (_, { id, idCarro }, { db }) => {
 
-    const votos = await db.collection("Batallas").findOne({_id:ObjectId(id)})
-    if(votos.carroUnoId == idCarro){
+    const votos = await db.collection("Batallas").findOne({ _id: ObjectId(id) })
+    if (votos.carroUnoId == idCarro) {
       db.collection("Batallas").updateOne(
         {
           _id: ObjectId(id),
@@ -540,7 +554,7 @@ const mutations = {
           $set: { carroUnoVotos: votos.carroUnoVotos + 1 },
         }
       );
-    }else{
+    } else {
       db.collection("Batallas").updateOne(
         {
           _id: ObjectId(id),
@@ -552,7 +566,7 @@ const mutations = {
       );
     }
 
-    
+
 
   },
 

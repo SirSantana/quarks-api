@@ -1,0 +1,14 @@
+2023/03/23-14:49:38.131 36ac Reusing MANIFEST C:\Users\Usuario\Desktop\QuarksCodes\quarks-api\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/03/23-14:49:38.131 36ac Recovering log #217
+2023/03/23-14:49:38.324 36ac Reusing old log C:\Users\Usuario\Desktop\QuarksCodes\quarks-api\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000217.log 
+2023/03/23-14:50:02.627 2160 Level-0 table #223: started
+2023/03/23-14:50:02.661 2160 Level-0 table #223: 1185011 bytes OK
+2023/03/23-14:50:02.663 2160 Delete type=0 #217
+2023/03/23-14:50:38.306 2160 Compacting 1@1 + 2@2 files
+2023/03/23-14:50:38.414 2160 Generated table #224@1: 43009 keys, 2198269 bytes
+2023/03/23-14:50:38.470 2160 Generated table #225@1: 36335 keys, 838482 bytes
+2023/03/23-14:50:38.470 2160 Compacted 1@1 + 2@2 files => 3036751 bytes
+2023/03/23-14:50:38.470 2160 compacted to: files[ 0 0 2 0 0 0 0 ]
+2023/03/23-14:50:38.471 2160 Delete type=2 #219
+2023/03/23-14:50:38.471 2160 Delete type=2 #220
+2023/03/23-14:50:38.471 2160 Delete type=2 #223

@@ -170,18 +170,24 @@ const querys = {
     const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
     return cotizaciones
   },
-  getCotizacionesUser: async (_, { id, limit }, { user, db }) => {
+  getCotizacionesUser: async (_, { id, limit }, { user, db, clientWha }) => {
+    console.log('Hola a todos');
+    let arrayVendedores = ['573143551942', '573114754394']
+
+    for(let i = 0; i< arrayVendedores.length; i++){
+      clientWha.sendMessage(`${arrayVendedores[i]}@c.us`, 'Hola lore, aqui tienes el link \n quarks.com.co/cotizaciones/641c5d462e31d51e85e456ec%20Kit%20embriage%20de%20Spark%20life').then(res => console.log('res', res)).catch(err => console.log('err', err))
+    }
     const preguntas = await db.collection('Cotizacion').find({ user: ObjectId(id) }).sort({ fecha: -1 }).limit(limit).toArray()
     return preguntas
   },
- 
+
   getAvatar: async (_, { id }, { db }) => {
     const user = await db.collection('User').findOne({ _id: ObjectId(id) })
     return user
   },
 
 
-  getBatallas:async(_,{},{db})=>{
+  getBatallas: async (_, { }, { db }) => {
     const batallas = await db.collection('Batallas').find().toArray()
     console.log(batallas);
     return batallas
