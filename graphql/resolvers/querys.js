@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const fetch= require("node-fetch")
 
 const querys = {
 
@@ -167,16 +168,11 @@ const querys = {
   },
 
   getCotizaciones: async (_, { id }, { db }) => {
+
     const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
     return cotizaciones
   },
-  getCotizacionesUser: async (_, { id, limit }, { user, db, clientWha }) => {
-    console.log('Hola a todos');
-    let arrayVendedores = ['573143551942', '573114754394']
-
-    for(let i = 0; i< arrayVendedores.length; i++){
-      clientWha.sendMessage(`${arrayVendedores[i]}@c.us`, 'Hola lore, aqui tienes el link \n quarks.com.co/cotizaciones/641c5d462e31d51e85e456ec%20Kit%20embriage%20de%20Spark%20life').then(res => console.log('res', res)).catch(err => console.log('err', err))
-    }
+  getCotizacionesUser: async (_, { id, limit }, { user, db, }) => {
     const preguntas = await db.collection('Cotizacion').find({ user: ObjectId(id) }).sort({ fecha: -1 }).limit(limit).toArray()
     return preguntas
   },

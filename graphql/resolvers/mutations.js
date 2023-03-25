@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const { getTemplate2, sendMail } = require('../../libs/mail');
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 const AzureUpload = require('../../libs/azureUpload');
+const Fetching = require('../fetching');
 
 
 const getToken = (user) => jwt.sign({ id: user?._id }, process.env.JWT_TOKEN)
@@ -430,10 +431,9 @@ const mutations = {
 
 
   //PREGUNTA
-  createPregunta: async (_, { input }, { db, user, clientWha }) => {
+  createPregunta: async (_, { input }, { db, user }) => {
     const newInput = { ...input, fecha: new Date(), titulo: input.titulo + " de " + input.referencia, user: user?._id ? ObjectId(user?._id) : '' }
     let newInputImage;
-    console.log(newInput);
     let res;
     if (input?.imagen) {
       let container = process.env.AZURE_CONTAINER_PARTS
@@ -450,13 +450,16 @@ const mutations = {
 
     }
     if (res) {
-      let arrayVendedores = ['573114754394','573143551942']
       let url = `quarks.com.co/cotizaciones/${res.insertedId}-${newInput?.titulo.split(" ").join('-')}`
       let frase = `😁 Haz recibido una cotizacion! \n🚘 ${newInput?.titulo} \n✍️ Cotiza en el siguiente link: \n` + url
-      for (let i = 0; i < arrayVendedores.length; i++) {
-        clientWha.sendMessage(`${arrayVendedores[i]}@c.us`, frase).then(res => console.log('res', res)).catch(err => console.log('err', err))
+      // 
+      let arrayVendedores = ['573114754394', '573138562763', '573143551942']
 
+      for (let i = 0; i < arrayVendedores.length; i++) {
+        console.log('numero',i);
+        await Fetching(frase, arrayVendedores[i])
       }
+
     }
     if (user) {
       db.collection("User").updateOne(
@@ -480,8 +483,10 @@ const mutations = {
     if (user?.role !== 'Vendedor') {
       throw new Error("No tienes permiso para cotizar");
     }
+    console.log(input);
     const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
     await db.collection("Cotizacion").insertOne(newInput);
+    console.log('Hola');
 
     db.collection("Preguntas").updateOne(
       {
