@@ -443,37 +443,39 @@ const mutations = {
       res = await db
         .collection("Preguntas")
         .insertOne(newInputImage)
+      return newInputImage
+
     } else {
       res = await db
         .collection("Preguntas")
         .insertOne(newInput)
-
+      return newInput
     }
-    if (res) {
-      let url = `quarks.com.co/cotizaciones/${res.insertedId}-${newInput?.titulo.split(" ").join('-')}`
-      let frase = `😁 Haz recibido una cotizacion! \n🚘 ${newInput?.titulo} \n✍️ Cotiza en el siguiente link: \n` + url
-      // 
-      let arrayVendedores = ['573114754394', '573138562763', '573143551942']
+    // if (res) {
+    //   let url = `quarks.com.co/cotizaciones/${res.insertedId}-${newInput?.titulo.split(" ").join('-')}`
+    //   let frase = `😁 Haz recibido una cotizacion! \n🚘 ${newInput?.titulo} \n✍️ Cotiza en el siguiente link: \n` + url
+    //   // 
+    //   let arrayVendedores = ['573114754394', '573138562763', '573143551942']
 
-      for (let i = 0; i < arrayVendedores.length; i++) {
-        console.log('numero',i);
-        await Fetching(frase, arrayVendedores[i])
-      }
+    //   for (let i = 0; i < arrayVendedores.length; i++) {
+    //     console.log(i);
+    //     await Fetching(frase, arrayVendedores[i])
+    //   }
 
-    }
-    if (user) {
-      db.collection("User").updateOne(
-        {
-          _id: ObjectId(user._id),
-        },
-        {
-          $set: { puntos: user?.puntos + 2 },
-          $push: {
-            preguntas: newInput._id ? newInput._id : newInputImage._id,
-          },
-        }
-      );
-    }
+    // }
+    // if (user) {
+    //   db.collection("User").updateOne(
+    //     {
+    //       _id: ObjectId(user._id),
+    //     },
+    //     {
+    //       $set: { puntos: user?.puntos + 2 },
+    //       $push: {
+    //         preguntas: newInput._id ? newInput._id : newInputImage._id,
+    //       },
+    //     }
+    //   );
+    // }
 
 
   },

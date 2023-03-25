@@ -1,3 +1,4 @@
+const fetch= require("node-fetch")
 
 async function Fetching(frase, numero) {
     console.log('frase', frase, numero);

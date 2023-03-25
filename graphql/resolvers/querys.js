@@ -1,5 +1,4 @@
 const { ObjectId } = require("mongodb");
-const fetch= require("node-fetch")
 
 const querys = {
 
