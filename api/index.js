@@ -62,6 +62,7 @@ const start = async () => {
     debug: true,
     introspection: false,
     context:
+    
       // async ({ req }) => {
       //   console.log('req',req.headers.authorization);
       //   const user = await getUserFromToken(req.headers.authorization, db);
