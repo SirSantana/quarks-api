@@ -42,7 +42,7 @@ const typeDefs = gql`
    getAvatar(id:ID):User
    preguntas(limit:Int, offset:Int):[Pregunta]
 
-
+   getScore:[User]
    getBatallas:[Batalla]
  }
 
@@ -63,8 +63,12 @@ const typeDefs = gql`
    deleteRecordatorio(id:ID!):String
 
    signUp(input: SignUpInput!): AuthUser
+   signUpWithoutEmail(name:String): AuthUser
+
    signIn(input: SignInInput!): AuthUser
    editUser(input:UserInput!):User!
+   addEmailUser(input:AddEmailInput!):User!
+
    editVendedor(input:VendedorEditInput):User
 
 
@@ -84,6 +88,8 @@ const typeDefs = gql`
    userRecurrent:String
 
    createVote(id:String, idCarro:String):String
+
+   interesadoPremium(celular:String, email:String):String
  }
  
  
@@ -93,6 +99,11 @@ const typeDefs = gql`
    avatar:String
    ciudad:String
    pais:String
+ }
+ input AddEmailInput{
+  email:String
+  password:String
+  confirmPassword:String
  }
  
  input VendedorEditInput{

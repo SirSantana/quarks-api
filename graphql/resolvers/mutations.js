@@ -96,6 +96,60 @@ const mutations = {
       throw new Error(error);
     }
   },
+  signUpWithoutEmail: async (_, { name }, { db }) => {
+    const newUser = {
+      name,
+      role: "Cliente",
+      puntos: 100
+    };
+    await db.collection("User").insertOne(newUser);
+    const user = await db
+      .collection("User")
+      .findOne({ _id: newUser._id });
+    return {
+      user,
+      token: getToken(user),
+    };
+  },
+  addEmailUser: async (_, { input }, { db, user }) => {
+    console.log(input);
+
+    if (user?.email) {
+      return new Error("No puedes cambiar esta informacion");
+    }
+    const existUser = await db
+      .collection("User")
+      .findOne({ email: input.email });
+    if (existUser) throw new Error("Ya existe una cuenta con ese correo");
+    try {
+      if (input.password !== input.confirmPassword) {
+        throw new Error("Datos Invalidos. Las contraseñas no coinciden");
+      }
+      const hashedPassword = bcrypt.hashSync(input.password);
+      const newInput = {
+        email: input.email,
+        password: hashedPassword,
+        puntos: user?.puntos + 100
+      };
+      // save to database
+      const result = await db.collection("User").findOneAndUpdate(
+        {
+          _id: user._id,
+        },
+        {
+          $set: newInput,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+      return result.value;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+
   signIn: async (_, { input }, { db }) => {
     const user = await db.collection("User").findOne({ email: input.email });
     const isPasswordCorrect =
@@ -245,7 +299,10 @@ const mutations = {
         .collection("User")
         .updateOne(
           { _id: ObjectId(user?._id) },
-          { $pull: { vehiculos: ObjectId(id) } }
+          {
+            $set: { puntos: user?.puntos - 50 },
+            $pull: { vehiculos: ObjectId(id) },
+          },
         );
       return id;
     } catch (error) {
@@ -577,6 +634,11 @@ const mutations = {
 
   },
 
+  interesadoPremium: async (_, { celular }, { db, user }) => {
+    const data = {celular, email:user?.email}
+    await db.collection("Interesado").insertOne(data);
+
+  }
 
 };
 module.exports = mutations

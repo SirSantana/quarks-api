@@ -11,7 +11,7 @@ const querys = {
       .collection("Vehicule")
       .find({ user: ObjectId(user._id) })
       .toArray();
-    return cars;
+    return cars.reverse();
   },
 
   //RECORDATORIOS
@@ -37,7 +37,7 @@ const querys = {
       .collection("Gasto")
       .find({ vehiculo: id })
       .sort({ fecha: -1 })
-      .limit(3)
+      .limit(5)
       .toArray();
     return res;
   },
@@ -72,6 +72,10 @@ const querys = {
   },
 
 
+  //SCORE
+  getScore: async (_, __, { db }) => {
+    return await db.collection('User').find().sort({"puntos":-1}).limit(10).toArray()
+  },
 
 
   //USERS
