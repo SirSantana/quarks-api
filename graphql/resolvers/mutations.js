@@ -662,7 +662,17 @@ const mutations = {
         $inc: { visitas:  1 },
       }
     );
-  }
+  },
+  interesadoAlmacen:async (_, { name, celular, almacen }, { db }) => {
+    await db.collection("Almacenes").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { visitas:  1 },
+      }
+    );
+  },
 
 };
 module.exports = mutations
