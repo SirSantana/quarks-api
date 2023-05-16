@@ -74,7 +74,7 @@ const querys = {
 
   //SCORE
   getScore: async (_, __, { db }) => {
-    return await db.collection('User').find().sort({"puntos":-1}).limit(10).toArray()
+    return await db.collection('User').find().sort({ "puntos": -1 }).limit(10).toArray()
   },
 
 
@@ -167,6 +167,8 @@ const querys = {
       .sort({ score: { $meta: "textScore" } })
       .limit(8)
       .toArray()
+
+
     return pregunta2
   },
 
@@ -190,6 +192,70 @@ const querys = {
     const batallas = await db.collection('Batallas').find().toArray()
     console.log(batallas);
     return batallas
+  },
+
+  getAlmacenesRepuestos: async (_, { id }, { db }) => {
+    const almacenes = await db
+      .collection("Almacenes")
+      .find()
+      .sort({ fecha: 1 })
+      .toArray();
+    return almacenes;
+  },
+  getAlmacenRepuestos: async (_, { id }, { db }) => {
+    const almacen = await db
+      .collection("Almacenes")
+      .findOne({ _id: ObjectId(id) })
+    return almacen;
+  },
+  getBusquedaAlmacenes: async (_, { categoria, marca }, { db }) => {
+    const almacenes = await db.collection('Almacenes').aggregate([
+      { $project: { _id: 1, marcas: 1, categorias: 1, ciudad: 1, fotoperfil: 1, barrio: 1, nombre: 1, cantMarcas: { $size: "$marcas" }, cantCategorias: { $size: "$categorias" } } },
+      {
+        $match: {
+          $and: [
+            { marcas: { $in: [marca] } },
+            { categorias: { $in: [categoria] } }
+          ]
+        }
+      },
+      { $sort: { cantMarcas: 1, cantCategorias: 1 } }
+    ]).toArray()
+    return almacenes
+
+  },
+  getAlmacenesByCategoria: async (_, { categoria }, { db }) => {
+    const almacenes = await db.collection('Almacenes').aggregate([
+      { $project: { _id: 1, marcas: 1, categorias: 1, ciudad: 1, fotoperfil: 1, barrio: 1, nombre: 1, cantMarcas: { $size: "$marcas" }, cantCategorias: { $size: "$categorias" } } },
+      {
+        $match: {
+          $and: [
+            { categorias: { $in: [categoria] } }
+          ]
+        }
+      },
+      { $sort: {  cantCategorias: 1 } }]).toArray()
+    return almacenes
+
+  },
+  getAlmacenesRecomendados: async (_, __, { db }) => {
+    const almacenes = await db.collection('Almacenes').find({recomendado: true}).toArray()
+    return almacenes
+
+  },
+  getOpiniones: async (_, {id}, { db }) => {
+    const opiniones = await db.collection('Opinion').find({almacen: id}).toArray()
+    return opiniones
+
+  },
+  getCalificacionOpiniones:async (_, {id}, { db }) => {
+    const opiniones = await db.collection('Opinion').find({almacen: id}).toArray()
+    let calificacion = 0
+    for(let i = 0; i < opiniones.length;i++){
+      calificacion+= opiniones[i].calificacion
+    }
+    let prom = calificacion / opiniones.length
+    return prom
   }
 };
 

@@ -26,6 +26,12 @@ const typeDefs = gql`
    getAlmacenes:[Negocio]
    getAlmacens(split:Int):[Negocio]
    getTalleres:[Negocio]
+   getAlmacenesRepuestos:[Almacen]
+   getAlmacenRepuestos(id:ID):Almacen
+   getBusquedaAlmacenes(categoria:String, marca:String):[Almacen]
+   getAlmacenesByCategoria(categoria:String):[Almacen]
+   getAlmacenesRecomendados:[Almacen]
+
   
    getProductos:[Producto]
    getOneProducto(id:ID):Producto
@@ -44,6 +50,8 @@ const typeDefs = gql`
 
    getScore:[User]
    getBatallas:[Batalla]
+   getOpiniones(id:ID):[Opinion]
+   getCalificacionOpiniones(id:ID):String
  }
 
 
@@ -90,6 +98,11 @@ const typeDefs = gql`
    createVote(id:String, idCarro:String):String
 
    interesadoPremium(celular:String, email:String):String
+
+   
+   createOpinion(input:CreateOpinionInput):Opinion
+   createVisitaAlmacen(id:ID):String
+
  }
  
  
@@ -105,7 +118,15 @@ const typeDefs = gql`
   password:String
   confirmPassword:String
  }
- 
+ input CreateOpinionInput{
+  email:String
+  fecha:Date
+  idpregunta:ID
+  descripcion:String
+  calificacion:Int
+  celular:Int
+  almacen:ID
+ }
  input VendedorEditInput{
   name:String
   avatar:String
@@ -114,6 +135,8 @@ const typeDefs = gql`
   direccion:String
   celular:String
   almacen:String
+  id:ID
+
 }
  input PreguntaInput{
   celular:String
@@ -266,7 +289,41 @@ const typeDefs = gql`
    kilometrajeInicial:String
    kilometrajeFinal:String
  }
-
+ type Opinion{
+  email:String
+  celular:Int
+  fecha:Date
+  calificacion:Int
+  likes:Int
+  descripcion:String
+  id:ID
+  idpregunta:ID
+  comentarios:[Opinion]
+  almacen:ID
+ }
+ type Almacen{
+  nombre:String
+  direccion:String
+  marcas:[String]
+  fotoperfil:String
+  categorias:[String]
+  facebook:String
+  paginaweb:String
+  verified:Boolean
+  fechapago:Date
+  mesespago:Int
+  descripcion:String
+  visitas:Int
+  id:ID
+  opiniones:[ID]
+  user:ID
+  ciudad:String
+  celular:String
+  barrio:String
+  calidades:[String]
+  ubicacionmaps:String
+  recomendado:Boolean
+ }
  input CreateVehiculeInput{
    tipo:String
    referencia:String
@@ -319,6 +376,7 @@ const typeDefs = gql`
    puntos:Int
    premium:Int
    recurrent:[Date]
+
 
  }
  type Vehicule{

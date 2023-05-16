@@ -637,7 +637,31 @@ const mutations = {
   interesadoPremium: async (_, { celular }, { db, user }) => {
     const data = {celular, email:user?.email}
     await db.collection("Interesado").insertOne(data);
-
+  },
+  createOpinion:async (_, { input }, { db }) => {
+    const newInput = {...input, fecha:new Date()}
+    await db.collection("Opinion").insertOne(newInput);
+    await db.collection("Almacenes").updateOne(
+      {
+        _id: ObjectId(input.almacen),
+      },
+      {
+        $push: {
+          opiniones: newInput._id,
+        },
+      }
+    )
+    return newInput
+  },
+  createVisitaAlmacen:async (_, { id }, { db }) => {
+    await db.collection("Almacenes").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { visitas:  1 },
+      }
+    );
   }
 
 };

@@ -35,6 +35,12 @@ const querys = require('./querys');
     },
     Batalla:{
       id: ({ _id, id }) => _id || id,
+    },
+    Almacen:{
+      id: ({ _id, id }) => _id || id,
+    },
+    Opinion:{
+      id: ({ _id, id }) => _id || id,
     }
   
   
