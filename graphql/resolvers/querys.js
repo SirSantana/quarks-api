@@ -235,7 +235,7 @@ const querys = {
         }
       },
       { $sort: {  cantCategorias: 1 } }]).toArray()
-    return almacenes
+    return almacenes.reverse()
 
   },
   getAlmacenesRecomendados: async (_, __, { db }) => {
