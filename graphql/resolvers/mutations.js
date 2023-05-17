@@ -673,6 +673,10 @@ const mutations = {
       }
     );
   },
+  interesadoAnuncio:async (_, { name, celular, }, { db }) => {
+    const data ={name, celular, fecha: new Date()}
+    await db.collection("Interesadoanuncio").insertOne(data);
 
+  },
 };
 module.exports = mutations

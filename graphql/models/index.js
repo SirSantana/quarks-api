@@ -103,6 +103,7 @@ const typeDefs = gql`
    createOpinion(input:CreateOpinionInput):Opinion
    createVisitaAlmacen(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
+   interesadoAnuncio(name:String, celular:String):String
 
  }
  
