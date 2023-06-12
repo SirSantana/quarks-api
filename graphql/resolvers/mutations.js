@@ -678,5 +678,16 @@ const mutations = {
     await db.collection("Interesadoanuncio").insertOne(data);
 
   },
+  createVistaArticulo:async (_, { id }, { db }) => {
+    await db.collection("Articulos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { vistas:  1 },
+      }
+    );
+
+  },
 };
 module.exports = mutations

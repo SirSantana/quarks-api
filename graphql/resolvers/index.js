@@ -41,6 +41,9 @@ const querys = require('./querys');
     },
     Opinion:{
       id: ({ _id, id }) => _id || id,
+    },
+    Articulo:{
+      id: ({ _id, id }) => _id || id,
     }
   
   

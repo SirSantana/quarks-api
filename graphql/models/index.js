@@ -52,6 +52,12 @@ const typeDefs = gql`
    getBatallas:[Batalla]
    getOpiniones(id:ID):[Opinion]
    getCalificacionOpiniones(id:ID):String
+
+
+   getAllArticulos:[Articulo]
+   getArticulo(id:ID):Articulo
+   getVistasArticulo(id:ID):String
+
  }
 
 
@@ -105,6 +111,7 @@ const typeDefs = gql`
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
    interesadoAnuncio(name:String, celular:String):String
 
+   createVistaArticulo(id:ID):String
  }
  
  
@@ -393,7 +400,54 @@ const typeDefs = gql`
    gastos:[ID]
    presupuesto:String
  }
+ type Articulo{
+  fecha:Date
+  id:ID
+  tituloPrincipal:String
+  autor:String
+  tiempoLectura:Int
+  vistas:Int
+  subtituloPrincipal:String
+  imgPrincipal:String
+  palabrasClave:[String]
+  tema:String
 
+  tituloParrafoUno:String
+  parrafoUno:String
+  parrafoUnoDos:String
+  parrafoUnoTres:String
+  imgParrafoUno:String
+
+  tituloParrafoDos:String
+  parrafoDos:String
+  parrafoDosDos:String
+  parrafoDosTres:String
+  imgParrafoDos:String
+
+  tituloParrafoTres:String
+  parrafoTres:String
+  parrafoTresDos:String
+  parrafoTresTres:String
+  imgParrafoTres:String
+
+  tituloParrafoCuatro:String
+  parrafoCuatro:String
+  parrafoCuatroDos:String
+  parrafoCuatroTres:String
+  imgParrafoCuatro:String
+
+  tituloParrafoCinco:String
+  parrafoCinco:String
+  parrafoCincoDos:String
+  parrafoCincoTres:String
+  imgParrafoCinco:String
+
+  tituloParrafoSeis:String
+  parrafoSeis:String
+  parrafoSeisDos:String
+  parrafoSeisTres:String
+  imgParrafoSeis:String
+ }
 
 `;
 

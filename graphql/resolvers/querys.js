@@ -107,9 +107,8 @@ const querys = {
     const negocios = await db.collection('Negocios').find().toArray()
     return negocios
   },
-  getAlmacenes: async (_, __, { db }) => {
+  getAlmacenes: async (_, __, { db, user }) => {
     const negocios = await db.collection('Negocios').find({ tipo: 'Almacen' }).toArray()
-
     return negocios
   },
   getAlmacens: async (_, { split }, { db }) => {
@@ -256,7 +255,28 @@ const querys = {
     }
     let prom = calificacion / opiniones.length
     return prom
-  }
+  },
+
+  getAllArticulos: async (_, __, { db }) => {
+    const articulos = await db
+      .collection("Articulos")
+      .find()
+      .toArray();
+    return articulos;
+  },
+  getArticulo: async (_, { id }, { db }) => {
+    const articulo = await db
+      .collection("Articulos")
+      .findOne({ _id: ObjectId(id) })
+    return articulo;
+  },
+  getVistasArticulo: async (_, { id }, { db }) => {
+    console.log('dadada',id);
+    const vistasArticulo = await db
+      .collection("Articulos")
+      .findOne( {_id: ObjectId(id) } , {vistas:1, _id:0})
+     return vistasArticulo.vistas
+  },
 };
 
 module.exports = querys;
