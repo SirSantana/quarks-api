@@ -54,7 +54,7 @@ const start = async () => {
 
   const app = express();
   app.use(cors({
-    origin: 'https://www.quarks.com.co/',
+    origin: 'https://www.quarks.com.co',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
