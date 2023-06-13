@@ -271,7 +271,6 @@ const querys = {
     return articulo;
   },
   getVistasArticulo: async (_, { id }, { db }) => {
-    console.log('dadada',id);
     const vistasArticulo = await db
       .collection("Articulos")
       .findOne( {_id: ObjectId(id) } , {vistas:1, _id:0})

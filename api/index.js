@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql } = require('apollo-server-express')
 const dotenv = require('dotenv')
 const { MongoClient, ObjectId } = require('mongodb')
 dotenv.config()
@@ -7,7 +7,8 @@ const { GraphQLScalarType } = require('graphql')
 const resolvers = require('../graphql/resolvers')
 const typeDefs = require('../graphql/models')
 const mutations = require('../graphql/resolvers/mutations')
-
+const express = require('express');
+const cors = require('cors');
 
 
 
@@ -51,7 +52,12 @@ const start = async () => {
 
 
 
-
+  const app = express();
+  app.use(cors({
+    origin: 'https://www.quarks.com.co/',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }));
 
   const server = new ApolloServer({
     typeDefs,
@@ -81,9 +87,12 @@ const start = async () => {
         }
       },
   });
+  await server.start();
+  server.applyMiddleware({ app });
+  const port = process.env.PORT || 4000;
 
-  server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
-    console.log(`Server ready at ${url}`)
+  app.listen(port, () => {
+    console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`);
   });
 }
 

@@ -13,8 +13,11 @@
   "dependencies": {
     "@azure/storage-blob": "12.12.0",
     "apollo-server": "3.10.1",
+    "apollo-server-express": "^3.12.0",
     "bcryptjs": "2.4.3",
-    "dotenv": "^16.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
     "fetch": "1.1.0",
     "graphql": "16.6.0",
     "jsonwebtoken": "8.5.1",
