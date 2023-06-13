@@ -411,6 +411,8 @@ const typeDefs = gql`
   imgPrincipal:String
   palabrasClave:[String]
   tema:String
+  descripcion:String
+  keywords:String
 
   tituloParrafoUno:String
   parrafoUno:String
