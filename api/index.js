@@ -53,8 +53,11 @@ const start = async () => {
 
 
   const app = express();
+  let desarrollo = 'http://localhost:3000'
+  let build = 'https://www.quarks.com.co'
+
   app.use(cors({
-    origin: 'https://www.quarks.com.co',
+    origin: desarrollo,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));

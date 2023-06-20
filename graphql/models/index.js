@@ -419,36 +419,43 @@ const typeDefs = gql`
   parrafoUnoDos:String
   parrafoUnoTres:String
   imgParrafoUno:String
+  videoUrlUno:String
 
   tituloParrafoDos:String
   parrafoDos:String
   parrafoDosDos:String
   parrafoDosTres:String
   imgParrafoDos:String
+  videoUrlDos:String
 
   tituloParrafoTres:String
   parrafoTres:String
   parrafoTresDos:String
   parrafoTresTres:String
   imgParrafoTres:String
+  videoUrlTres:String
 
   tituloParrafoCuatro:String
   parrafoCuatro:String
   parrafoCuatroDos:String
   parrafoCuatroTres:String
   imgParrafoCuatro:String
+  videoUrlCuatro:String
 
   tituloParrafoCinco:String
   parrafoCinco:String
   parrafoCincoDos:String
   parrafoCincoTres:String
   imgParrafoCinco:String
+  videoUrlCinco:String
 
   tituloParrafoSeis:String
   parrafoSeis:String
   parrafoSeisDos:String
   parrafoSeisTres:String
   imgParrafoSeis:String
+  videoUrlSeis:String
+
  }
 
 `;
