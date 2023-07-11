@@ -44,8 +44,10 @@ const querys = require('./querys');
     },
     Articulo:{
       id: ({ _id, id }) => _id || id,
-    }
-  
+    },
+    NegocioVDos:{
+      id: ({ _id, id }) => _id || id,
+    },
   
   };
 

@@ -58,6 +58,9 @@ const typeDefs = gql`
    getArticulo(id:ID):Articulo
    getVistasArticulo(id:ID):String
 
+   getNegocioVDos:[NegocioVDos]
+   getOneNegocioVDos(id:ID):NegocioVDos
+
  }
 
 
@@ -108,6 +111,7 @@ const typeDefs = gql`
    
    createOpinion(input:CreateOpinionInput):Opinion
    createVisitaAlmacen(id:ID):String
+   createVisitaWhatsapp(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
    interesadoAnuncio(name:String, celular:String):String
 
@@ -332,6 +336,29 @@ const typeDefs = gql`
   calidades:[String]
   ubicacionmaps:String
   recomendado:Boolean
+ }
+ type NegocioVDos{
+  nombre:String
+  direccion:String
+  fotoperfil:String
+  categorias:[String]
+  facebook:String
+  paginaweb:String
+  visitas:Int
+  whatsapp:String
+  telefono:String
+  acercanegocio:String
+  localidad:String
+  ciudad:String
+  pais:String
+  fotossecundarias:[String]
+  opiniones:[ID]
+  id:ID
+  sponsored:String
+  nivelnegocio:String
+  horario:String
+  ubicacionmaps:String
+  visitaswhatsapp:Int
  }
  input CreateVehiculeInput{
    tipo:String

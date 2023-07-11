@@ -276,6 +276,22 @@ const querys = {
       .findOne( {_id: ObjectId(id) } , {vistas:1, _id:0})
      return vistasArticulo.vistas
   },
+
+  //NEGOCIOV2
+  getNegocioVDos: async (_, { id }, { db }) => {
+    const negociosVDos = await db
+      .collection("NegocioVDos")
+      .find()
+      .toArray();
+     return negociosVDos
+  },
+  getOneNegocioVDos: async (_, { id }, { db }) => {
+    const negociosVDos = await db
+      .collection("NegocioVDos")
+      .findOne({ _id: ObjectId(id) })
+     return negociosVDos
+  },
+
 };
 
 module.exports = querys;

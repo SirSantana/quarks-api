@@ -635,13 +635,14 @@ const mutations = {
   },
 
   interesadoPremium: async (_, { celular }, { db, user }) => {
-    const data = {celular, email:user?.email}
+    const data = { celular, email: user?.email }
     await db.collection("Interesado").insertOne(data);
   },
-  createOpinion:async (_, { input }, { db }) => {
-    const newInput = {...input, fecha:new Date()}
+  createOpinion: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date() }
     await db.collection("Opinion").insertOne(newInput);
-    await db.collection("Almacenes").updateOne(
+    console.log(input);
+    await db.collection("NegocioVDos").updateOne(
       {
         _id: ObjectId(input.almacen),
       },
@@ -653,41 +654,52 @@ const mutations = {
     )
     return newInput
   },
-  createVisitaAlmacen:async (_, { id }, { db }) => {
+  createVisitaAlmacen: async (_, { id }, { db }) => {
+    console.log('Hola');
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { visitas: 1 },
+      }
+    );
+  },
+  interesadoAlmacen: async (_, { name, celular, almacen }, { db }) => {
     await db.collection("Almacenes").updateOne(
       {
         _id: ObjectId(id),
       },
       {
-        $inc: { visitas:  1 },
+        $inc: { visitas: 1 },
       }
     );
   },
-  interesadoAlmacen:async (_, { name, celular, almacen }, { db }) => {
-    await db.collection("Almacenes").updateOne(
-      {
-        _id: ObjectId(id),
-      },
-      {
-        $inc: { visitas:  1 },
-      }
-    );
-  },
-  interesadoAnuncio:async (_, { name, celular, }, { db }) => {
-    const data ={name, celular, fecha: new Date()}
+  interesadoAnuncio: async (_, { name, celular, }, { db }) => {
+    const data = { name, celular, fecha: new Date() }
     await db.collection("Interesadoanuncio").insertOne(data);
 
   },
-  createVistaArticulo:async (_, { id }, { db }) => {
+  createVistaArticulo: async (_, { id }, { db }) => {
     await db.collection("Articulos").updateOne(
       {
         _id: ObjectId(id),
       },
       {
-        $inc: { vistas:  1 },
+        $inc: { vistas: 1 },
       }
-    );
+    )
 
   },
-};
-module.exports = mutations
+  createVisitaWhatsapp: async (_, { id }, { db }) => {
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { visitaswhatsapp: 1 },
+      }
+    );
+  }
+  };
+  module.exports = mutations
