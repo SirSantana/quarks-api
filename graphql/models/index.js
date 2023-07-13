@@ -112,6 +112,7 @@ const typeDefs = gql`
    createOpinion(input:CreateOpinionInput):Opinion
    createVisitaAlmacen(id:ID):String
    createVisitaWhatsapp(id:ID):String
+   createImpresionAlmacen(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
    interesadoAnuncio(name:String, celular:String):String
 
@@ -139,6 +140,8 @@ const typeDefs = gql`
   calificacion:Int
   celular:Int
   almacen:ID
+  foto:String
+  nombre:String
  }
  input VendedorEditInput{
   name:String
@@ -313,6 +316,8 @@ const typeDefs = gql`
   idpregunta:ID
   comentarios:[Opinion]
   almacen:ID
+  nombre:String
+  foto:String
  }
  type Almacen{
   nombre:String
@@ -359,6 +364,7 @@ const typeDefs = gql`
   horario:String
   ubicacionmaps:String
   visitaswhatsapp:Int
+  impresiones:Int
  }
  input CreateVehiculeInput{
    tipo:String

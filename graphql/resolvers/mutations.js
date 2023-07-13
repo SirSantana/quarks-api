@@ -641,7 +641,6 @@ const mutations = {
   createOpinion: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("Opinion").insertOne(newInput);
-    console.log(input);
     await db.collection("NegocioVDos").updateOne(
       {
         _id: ObjectId(input.almacen),
@@ -655,7 +654,6 @@ const mutations = {
     return newInput
   },
   createVisitaAlmacen: async (_, { id }, { db }) => {
-    console.log('Hola');
     await db.collection("NegocioVDos").updateOne(
       {
         _id: ObjectId(id),
@@ -664,6 +662,17 @@ const mutations = {
         $inc: { visitas: 1 },
       }
     );
+  },
+  createImpresionAlmacen: async (_, { id }, { db }) => {
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { impresion: 1 },
+      }
+    )
+
   },
   interesadoAlmacen: async (_, { name, celular, almacen }, { db }) => {
     await db.collection("Almacenes").updateOne(
@@ -700,6 +709,7 @@ const mutations = {
         $inc: { visitaswhatsapp: 1 },
       }
     );
-  }
+  },
+  
   };
   module.exports = mutations
