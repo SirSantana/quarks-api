@@ -117,6 +117,7 @@ const typeDefs = gql`
    interesadoAnuncio(name:String, celular:String):String
 
    createVistaArticulo(id:ID):String
+   createTaller(input:CreateTallerInput):NegocioVDos
  }
  
  
@@ -126,6 +127,16 @@ const typeDefs = gql`
    avatar:String
    ciudad:String
    pais:String
+ }
+ input CreateTallerInput{
+  nombre:String
+  direccion:String
+  localidad:String
+  telefono:String
+  whatsapp:String
+  categorias:[String]
+  fecha:Date
+  horario:String
  }
  input AddEmailInput{
   email:String
