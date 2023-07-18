@@ -713,7 +713,6 @@ const mutations = {
   createTaller: async (_, { input}, { db }) => {
     const newInput = { ...input, fecha: new Date(), ciudad:'Bogota', pais:'Colombia', paginaweb:'', fotoPerfil:'', facebook:'',visitas:1,acercanegocio:'',fotossecundarias:'', sponsored:0, nivelnegocio:'0',visitaswhatsapp:0, ubicacionmaps:'',impresion:1, opiniones:[] }
     await db.collection("NegocioVDos").insertOne(newInput);
-
     return newInput
   },
 };
