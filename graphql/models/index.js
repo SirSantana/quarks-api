@@ -112,6 +112,10 @@ const typeDefs = gql`
    createOpinion(input:CreateOpinionInput):Opinion
    createVisitaAlmacen(id:ID):String
    createVisitaWhatsapp(id:ID):String
+   createClickTelefono(id:ID):String
+   createClickMapaDireccion(id:ID):String
+   createClickCompartido(id:ID):String
+   
    createImpresionAlmacen(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
    interesadoAnuncio(name:String, celular:String):String
@@ -376,6 +380,9 @@ const typeDefs = gql`
   ubicacionmaps:String
   visitaswhatsapp:Int
   impresiones:Int
+  vecescompartido:Int
+  vecestelefono:Int
+  visitasmapa:Int
  }
  input CreateVehiculeInput{
    tipo:String
