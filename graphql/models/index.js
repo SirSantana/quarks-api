@@ -60,7 +60,9 @@ const typeDefs = gql`
 
    getNegocioVDos:[NegocioVDos]
    getOneNegocioVDos(id:ID):NegocioVDos
+   getStadisticsHalfMonth(id:ID):NegocioVDos
 
+   getConsumos:[Consumo]
  }
 
 
@@ -122,6 +124,8 @@ const typeDefs = gql`
 
    createVistaArticulo(id:ID):String
    createTaller(input:CreateTallerInput):NegocioVDos
+
+   createConsumo(fecha:String, galon:String, consumo:String):Consumo
  }
  
  
@@ -259,6 +263,11 @@ const typeDefs = gql`
   extras:String
   imagen:String
  }
+ type Consumo{
+  fecha:String
+  consumo:String
+  galon:String
+ }
  type Cotizacion{
   descripcion:String
   precio:String
@@ -379,7 +388,7 @@ const typeDefs = gql`
   horario:String
   ubicacionmaps:String
   visitaswhatsapp:Int
-  impresiones:Int
+  impresion:Int
   vecescompartido:Int
   vecestelefono:Int
   visitasmapa:Int

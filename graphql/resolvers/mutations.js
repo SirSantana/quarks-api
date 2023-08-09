@@ -745,6 +745,12 @@ const mutations = {
     await db.collection("NegocioVDos").insertOne(newInput);
     return newInput
   },
+  createConsumo: async (_, {fecha, consumo, galon}, { db }) => {
+
+    const newInput = { fecha, consumo, galon }
+    await db.collection("Consumo").insertOne(newInput);
+    return newInput
+  },
   
 };
 module.exports = mutations

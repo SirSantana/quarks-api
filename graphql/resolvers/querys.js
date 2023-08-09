@@ -189,7 +189,6 @@ const querys = {
 
   getBatallas: async (_, { }, { db }) => {
     const batallas = await db.collection('Batallas').find().toArray()
-    console.log(batallas);
     return batallas
   },
 
@@ -291,7 +290,21 @@ const querys = {
       .findOne({ _id: ObjectId(id) })
      return negociosVDos
   },
-
+  getStadisticsHalfMonth: async (_, { id }, { db }) => {
+    const negociosVDos = await db
+      .collection("NegocioVDos")
+      .findOne({ _id: ObjectId(id) })
+     return negociosVDos
+  },
+  getConsumos: async (_, { id }, { db }) => {
+    const consumos = await db
+      .collection("Consumo")
+      .find()
+      .sort({ id: 1 })
+      .limit(20)
+      .toArray();
+     return consumos
+  },
 };
 
 module.exports = querys;
