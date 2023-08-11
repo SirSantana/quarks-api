@@ -217,7 +217,7 @@ const querys = {
           ]
         }
       },
-      { $sort: {cantCategorias: 1 } }
+      { $sort: { cantCategorias: 1 } }
     ]).toArray()
     return almacenes
 
@@ -232,28 +232,42 @@ const querys = {
           ]
         }
       },
-      { $sort: {  cantCategorias: 1 } }]).toArray()
+      { $sort: { cantCategorias: 1 } }]).toArray()
     return almacenes
 
   },
   getAlmacenesRecomendados: async (_, __, { db }) => {
-    const almacenes = await db.collection('Almacenes').find({recomendado: true}).toArray()
+    const almacenes = await db.collection('Almacenes').find({ recomendado: true }).toArray()
     return almacenes
 
   },
-  getOpiniones: async (_, {id}, { db }) => {
-    const opiniones = await db.collection('Opinion').find({almacen: id}).toArray()
+  getOpiniones: async (_, { id }, { db }) => {
+    const opiniones = await db.collection('Opinion').find({ almacen: id }).sort({ fecha: -1 }).toArray()
     return opiniones
 
   },
-  getCalificacionOpiniones:async (_, {id}, { db }) => {
-    const opiniones = await db.collection('Opinion').find({almacen: id}).toArray()
+  getCalificacionOpiniones: async (_, { id }, { db }) => {
+    const opiniones = await db.collection('Opinion').find({ almacen: id }).toArray()
+    const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
     let calificacion = 0
-    for(let i = 0; i < opiniones.length;i++){
-      calificacion+= opiniones[i].calificacion
+    let numOpiniones = 0
+    for (let i = 0; i < opiniones.length; i++) {
+      if (opiniones[i]?.email.length > 0) {
+        calificacion += opiniones[i].calificacion
+        numOpiniones += 1
+      }
     }
-    let prom = calificacion / opiniones.length
-    return prom
+    const sumaCalificaciones = (parseFloat(calificacion) * numOpiniones) + (parseFloat(taller?.promediocalificacionesmaps) * parseFloat(taller?.numerocalificacionesmaps));
+    let sumaTotalCalificaciones = numOpiniones;
+    if (taller?.numerocalificacionesmaps) {
+      sumaTotalCalificaciones = numOpiniones + parseFloat(taller?.numerocalificacionesmaps)
+    }
+    const promedioTotal = sumaCalificaciones / sumaTotalCalificaciones;
+    if (promedioTotal > 0) {
+      return promedioTotal.toFixed(1)
+    } else {
+      return 0
+    }
   },
 
   getAllArticulos: async (_, __, { db }) => {
@@ -272,8 +286,8 @@ const querys = {
   getVistasArticulo: async (_, { id }, { db }) => {
     const vistasArticulo = await db
       .collection("Articulos")
-      .findOne( {_id: ObjectId(id) } , {vistas:1, _id:0})
-     return vistasArticulo.vistas
+      .findOne({ _id: ObjectId(id) }, { vistas: 1, _id: 0 })
+    return vistasArticulo.vistas
   },
 
   //NEGOCIOV2
@@ -282,19 +296,19 @@ const querys = {
       .collection("NegocioVDos")
       .find()
       .toArray();
-     return negociosVDos
+    return negociosVDos
   },
   getOneNegocioVDos: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ _id: ObjectId(id) })
-     return negociosVDos
+    return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ _id: ObjectId(id) })
-     return negociosVDos
+    return negociosVDos
   },
   getConsumos: async (_, { id }, { db }) => {
     const consumos = await db
@@ -303,7 +317,7 @@ const querys = {
       .sort({ id: 1 })
       .limit(20)
       .toArray();
-     return consumos
+    return consumos
   },
 };
 

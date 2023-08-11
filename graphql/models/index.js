@@ -392,6 +392,7 @@ const typeDefs = gql`
   vecescompartido:Int
   vecestelefono:Int
   visitasmapa:Int
+  numerocalificacionesmaps:String
  }
  input CreateVehiculeInput{
    tipo:String
