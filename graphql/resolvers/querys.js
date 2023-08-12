@@ -249,25 +249,26 @@ const querys = {
   getCalificacionOpiniones: async (_, { id }, { db }) => {
     const opiniones = await db.collection('Opinion').find({ almacen: id }).toArray()
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
-    let calificacion = 0
-    let numOpiniones = 0
+
+    let calificacionQuarks = 0
+    let opinionesQuarks = 0
+
     for (let i = 0; i < opiniones.length; i++) {
       if (opiniones[i]?.email.length > 0) {
-        calificacion += opiniones[i].calificacion
-        numOpiniones += 1
+        calificacionQuarks += opiniones[i].calificacion
+        opinionesQuarks +=1
       }
     }
-    const sumaCalificaciones = (parseFloat(calificacion) * numOpiniones) + (parseFloat(taller?.promediocalificacionesmaps) * parseFloat(taller?.numerocalificacionesmaps));
-    let sumaTotalCalificaciones = numOpiniones;
-    if (taller?.numerocalificacionesmaps) {
-      sumaTotalCalificaciones = numOpiniones + parseFloat(taller?.numerocalificacionesmaps)
-    }
-    const promedioTotal = sumaCalificaciones / sumaTotalCalificaciones;
+    let promedioQuarks = calificacionQuarks??1 /opinionesQuarks??1
+    const sumaPromedio = (promedioQuarks??0 * opinionesQuarks??0) + (parseFloat(taller?.promediocalificacionesmaps ?? 0) *  parseFloat(taller?.numerocalificacionesmaps ?? 0));
+    const sumaTotalNumeros = opinionesQuarks + parseFloat(taller?.numerocalificacionesmaps ?? 0);
+    const promedioTotal = sumaPromedio / sumaTotalNumeros;
     if (promedioTotal > 0) {
       return promedioTotal.toFixed(1)
     } else {
       return 0
     }
+
   },
 
   getAllArticulos: async (_, __, { db }) => {
