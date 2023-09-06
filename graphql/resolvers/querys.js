@@ -172,9 +172,7 @@ const querys = {
   },
 
   getCotizaciones: async (_, { id }, { db }) => {
-    console.log(id, 'iddsdsd');
     const cotizaciones = await db.collection('Cotizacion').find({ pregunta: ObjectId(id) }).toArray();
-    console.log(cotizaciones, 'cotis');
     return cotizaciones
   },
   getCotizacionesUser: async (_, { id, limit }, { user, db, }) => {

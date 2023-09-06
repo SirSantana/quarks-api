@@ -55,10 +55,10 @@ const start = async () => {
   const app = express();
   let desarrollo = 'http://localhost:3000'
   let build = 'https://www.quarks.com.co'
-  let build2 = 'https://quarks-cotiza-tus-repuestos.vercel.app'
+  let build2 = 'https://www.cotizatusrepuestos.com'
 
   app.use(cors({
-    origin: [build, build2],
+    origin: [build, build2,],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));

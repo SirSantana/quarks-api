@@ -542,10 +542,8 @@ const mutations = {
     if (user?.role !== 'Vendedor') {
       throw new Error("No tienes permiso para cotizar");
     }
-    console.log(input);
-    const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: user?.celular, }
+    const newInput = { ...input, fecha: new Date(), pregunta: ObjectId(input.pregunta), user: user._id, celular: '3143551942', }
     await db.collection("Cotizacion").insertOne(newInput);
-    console.log('Hola');
 
     db.collection("Preguntas").updateOne(
       {
