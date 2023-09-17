@@ -395,6 +395,7 @@ const typeDefs = gql`
   numerocalificacionesmaps:String
   promediocalificacionesmaps:String
   urltallermaps:String
+  userName:String
  }
  input CreateVehiculeInput{
    tipo:String

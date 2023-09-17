@@ -299,9 +299,11 @@ const querys = {
     return negociosVDos
   },
   getOneNegocioVDos: async (_, { id }, { db }) => {
+    console.log(id);
     const negociosVDos = await db
       .collection("NegocioVDos")
-      .findOne({ _id: ObjectId(id) })
+      .findOne({ userName: id })
+      console.log(negociosVDos);
     return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {

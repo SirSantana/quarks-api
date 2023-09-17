@@ -654,7 +654,7 @@ const mutations = {
   createVisitaAlmacen: async (_, { id }, { db }) => {
     await db.collection("NegocioVDos").updateOne(
       {
-        _id: ObjectId(id),
+        userName:id,
       },
       {
         $inc: { visitas: 1 },
