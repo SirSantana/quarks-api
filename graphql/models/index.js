@@ -396,6 +396,9 @@ const typeDefs = gql`
   promediocalificacionesmaps:String
   urltallermaps:String
   userName:String
+  tipo:String
+  marcasAutos:[String]
+
  }
  input CreateVehiculeInput{
    tipo:String
