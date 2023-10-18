@@ -632,8 +632,8 @@ const mutations = {
 
   },
 
-  interesadoPremium: async (_, { celular }, { db, user }) => {
-    const data = { celular, email: user?.email }
+  interesadoPremium: async (_, { nombre, email }, { db }) => {
+    const data = { nombre,email }
     await db.collection("Interesado").insertOne(data);
   },
   createOpinion: async (_, { input }, { db }) => {

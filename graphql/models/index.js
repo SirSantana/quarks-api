@@ -108,7 +108,7 @@ const typeDefs = gql`
 
    createVote(id:String, idCarro:String):String
 
-   interesadoPremium(celular:String, email:String):String
+   interesadoPremium(nombre:String, email:String):String
 
    
    createOpinion(input:CreateOpinionInput):Opinion
@@ -398,6 +398,7 @@ const typeDefs = gql`
   userName:String
   tipo:String
   marcasAutos:[String]
+
 
  }
  input CreateVehiculeInput{
