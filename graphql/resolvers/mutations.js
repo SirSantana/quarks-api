@@ -508,6 +508,7 @@ const mutations = {
         .insertOne(newInput)
       return newInput
     }
+
     // if (res) {
     //   let url = `quarks.com.co/cotizaciones/${res.insertedId}-${newInput?.titulo.split(" ").join('-')}`
     //   let frase = `😁 Haz recibido una cotizacion! \n🚘 ${newInput?.titulo} \n✍️ Cotiza en el siguiente link: \n` + url
@@ -633,7 +634,7 @@ const mutations = {
   },
 
   interesadoPremium: async (_, { nombre, email }, { db }) => {
-    const data = { nombre,email }
+    const data = { nombre, email }
     await db.collection("Interesado").insertOne(data);
   },
   createOpinion: async (_, { input }, { db }) => {
@@ -654,7 +655,7 @@ const mutations = {
   createVisitaAlmacen: async (_, { id }, { db }) => {
     await db.collection("NegocioVDos").updateOne(
       {
-        userName:id,
+        userName: id,
       },
       {
         $inc: { visitas: 1 },
@@ -738,17 +739,88 @@ const mutations = {
       }
     );
   },
-  createTaller: async (_, { input}, { db }) => {
-    const newInput = { ...input, fecha: new Date(), ciudad:'Bogota', pais:'Colombia', paginaweb:'', fotoPerfil:'', facebook:'',visitas:1,acercanegocio:'',fotossecundarias:'', sponsored:0, nivelnegocio:'0',visitaswhatsapp:0, ubicacionmaps:'',impresion:1, opiniones:[] }
+  createTaller: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date(), ciudad: 'Bogota', pais: 'Colombia', paginaweb: '', fotoPerfil: '', facebook: '', visitas: 1, acercanegocio: '', fotossecundarias: '', sponsored: 0, nivelnegocio: '0', visitaswhatsapp: 0, ubicacionmaps: '', impresion: 1, opiniones: [] }
     await db.collection("NegocioVDos").insertOne(newInput);
     return newInput
   },
-  createConsumo: async (_, {fecha, consumo, galon}, { db }) => {
+  createConsumo: async (_, { fecha, consumo, galon }, { db }) => {
 
     const newInput = { fecha, consumo, galon }
     await db.collection("Consumo").insertOne(newInput);
     return newInput
   },
-  
+  createNegocioVDos: async (_, { email, password, username }, { db }) => {
+
+    const userExists = await db.collection("NegocioVDos").findOne({
+      $or: [
+        { userName: username },
+        { email: email }
+      ]
+    });
+
+    if (userExists) {
+      if (userExists.userName === username) {
+        return new Error('Ya existe un negocio con ese nombre. Prueba otro.');
+      } else {
+        return new Error('Ya existe un negocio con ese correo. Prueba otro.');
+      }
+    }
+    const newInput = { email, password: await bcrypt.hash(password, 10), userName: username.replace(/\s/g, '-').toLowerCase(), nombre:username }
+
+    const res = await db.collection("NegocioVDos").insertOne(newInput);
+
+    const negocio = await db
+      .collection("NegocioVDos")
+      .findOne({ email: newInput.email });
+
+    return {
+      negocio,
+      token: getToken(negocio),
+    };
+  },
+  editNegocioVDos: async (_, { input}, { negocio, db }) => {
+
+    let newInputImage;
+    let res;
+    if (input?.fotoperfil) {
+      let container = process.env.AZURE_CONTAINER_PARTS
+      let nameFile = new Date().getTime()
+      await AzureUpload({ container, file: input.fotoperfil, nameFile })
+      newInputImage = await { ...input, fotoperfil: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+      res = await db
+        .collection("NegocioVDos")
+        .findOneAndUpdate(
+          {
+            _id: ObjectId(negocio._id),
+          },
+          {
+            $set: newInputImage,
+          },
+          {
+            returnDocument: "after",
+          }
+        );
+      return res.value
+
+    } else {
+      res = await db
+        .collection("NegocioVDos")
+        .findOneAndUpdate(
+          {
+            _id: ObjectId(negocio._id),
+          },
+          {
+            $set: input,
+          },
+          {
+            returnDocument: "after",
+          }
+        );
+      return res.value
+    }
+    
+  }
+
 };
 module.exports = mutations

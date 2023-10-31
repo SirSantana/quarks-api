@@ -299,11 +299,9 @@ const querys = {
     return negociosVDos
   },
   getOneNegocioVDos: async (_, { id }, { db }) => {
-    console.log(id);
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ userName: id })
-      console.log(negociosVDos);
     return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
@@ -321,6 +319,18 @@ const querys = {
       .toArray();
     return consumos
   },
+  verifyAccountCheck: async (_, {username}, { db, negocio}) => {
+    let usernameParse = username.replace(/\s/g, '-').toLowerCase()
+   const isCreated=  await db.collection("NegocioVDos").findOne({userName:usernameParse})
+   if(isCreated){
+    return false
+   }
+   return true 
+  },
+  getNegocioVDosOne: async (_, __, { negocio }) => {
+    return negocio;
+  },
+
 };
 
 module.exports = querys;

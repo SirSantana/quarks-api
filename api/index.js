@@ -35,7 +35,15 @@ const getUserFromToken = async (token, db) => {
   return await db.collection('User').findOne({ _id: ObjectId(tokenData?.id) });
 }
 
-
+const getNegocioFromToken = async (token, db) => {
+  if (!token) { return null }
+  const tokenData = jwt.verify(JSON.parse(token), process.env.JWT_TOKEN)
+  if (!tokenData?.id) {
+    return null;
+  }
+  const negocio=  await db.collection('NegocioVDos').findOne({ _id: ObjectId(tokenData?.id) });
+  return negocio
+}
 const start = async () => {
 
 
@@ -58,11 +66,11 @@ const start = async () => {
   let build2 = 'https://www.cotizatusrepuestos.com'
 
   app.use(cors({
-    origin: [build, build2],
+    origin: [build, build2, ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
-
+  app.use(express.json({ limit: '2mb' }))
   const server = new ApolloServer({
     typeDefs,
     resolvers: {
@@ -83,10 +91,14 @@ const start = async () => {
       //   }
       // },
       async ({ req }) => {
+        console.log(req.headers);
         const user = await getUserFromToken(req.headers.authorization, db);
+        const negocio = await getNegocioFromToken(req.headers.authorization, db);
+        console.log(negocio, '97');
         return {
           db,
           user,
+          negocio
           // clientWha
         }
       },

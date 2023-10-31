@@ -59,10 +59,13 @@ const typeDefs = gql`
    getVistasArticulo(id:ID):String
 
    getNegocioVDos:[NegocioVDos]
+   getNegocioVDosOne:NegocioVDos
    getOneNegocioVDos(id:ID):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
 
    getConsumos:[Consumo]
+   verifyAccountCheck(username:String):Boolean
+
  }
 
 
@@ -126,6 +129,8 @@ const typeDefs = gql`
    createTaller(input:CreateTallerInput):NegocioVDos
 
    createConsumo(fecha:String, galon:String, consumo:String):Consumo
+   createNegocioVDos(email:String, password:String, username:String):AuthNegocioVDos
+   editNegocioVDos(input:EditNegocioInput):NegocioVDos
  }
  
  
@@ -145,6 +150,16 @@ const typeDefs = gql`
   categorias:[String]
   fecha:Date
   horario:String
+ }
+ input EditNegocioInput{
+  direccion:String
+  ciudad:String
+  pais:String
+  whatsapp:String
+  telefono:String
+  horario:String
+  fotoperfil:String
+  categorias:[String]
  }
  input AddEmailInput{
   email:String
@@ -398,7 +413,8 @@ const typeDefs = gql`
   userName:String
   tipo:String
   marcasAutos:[String]
-
+  email:String
+  password:String
 
  }
  input CreateVehiculeInput{
@@ -419,6 +435,10 @@ const typeDefs = gql`
    user: User!
    token: String!
  }
+ type AuthNegocioVDos {
+  negocio: NegocioVDos!
+  token: String!
+}
  input VendedorCreateInput{
   email:String
   name:String
