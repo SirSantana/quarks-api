@@ -780,7 +780,7 @@ const mutations = {
     };
   },
   editNegocioVDos: async (_, { input}, { negocio, db }) => {
-
+    console.log(input, 'input232');
     let newInputImage;
     let res;
     if (input?.fotoperfil) {
@@ -820,7 +820,22 @@ const mutations = {
       return res.value
     }
     
-  }
+  },
+
+  signInNegocio: async (_, { email, password, }, { db }) => {
+    const negocio = await db.collection("NegocioVDos").findOne({ email: email });
+    const isPasswordCorrect =
+    negocio && bcrypt.compareSync(password, negocio.password);
+
+    if (!negocio || !isPasswordCorrect) {
+      throw new Error("Datos Invalidos. Revisa tu Correo y Contraseña");
+    }
+    
+    return {
+      negocio,
+      token: getToken(negocio),
+    };
+  },
 
 };
 module.exports = mutations

@@ -131,6 +131,7 @@ const typeDefs = gql`
    createConsumo(fecha:String, galon:String, consumo:String):Consumo
    createNegocioVDos(email:String, password:String, username:String):AuthNegocioVDos
    editNegocioVDos(input:EditNegocioInput):NegocioVDos
+   signInNegocio(email:String, password:String):AuthNegocioVDos
  }
  
  
@@ -160,6 +161,7 @@ const typeDefs = gql`
   horario:String
   fotoperfil:String
   categorias:[String]
+  nombre:String
  }
  input AddEmailInput{
   email:String

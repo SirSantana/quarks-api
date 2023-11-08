@@ -66,7 +66,7 @@ const start = async () => {
   let build2 = 'https://www.cotizatusrepuestos.com'
 
   app.use(cors({
-    origin: [build, build2, ],
+    origin: [build, build2,],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
@@ -91,10 +91,8 @@ const start = async () => {
       //   }
       // },
       async ({ req }) => {
-        console.log(req.headers);
         const user = await getUserFromToken(req.headers.authorization, db);
         const negocio = await getNegocioFromToken(req.headers.authorization, db);
-        console.log(negocio, '97');
         return {
           db,
           user,
