@@ -64,9 +64,10 @@ const start = async () => {
   let desarrollo = 'http://localhost:3000'
   let build = 'https://www.quarks.com.co'
   let build2 = 'https://www.cotizatusrepuestos.com'
+  let build3 = 'https://www.quarks-web-sirsantana.vercel.app'
 
   app.use(cors({
-    origin: [build, build2,],
+    origin: [build, build2, build3],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
