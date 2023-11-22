@@ -178,6 +178,9 @@ const typeDefs = gql`
   almacen:ID
   foto:String
   nombre:String
+  marca:String
+  servicios:[String]
+  referencia:String
  }
  input VendedorEditInput{
   name:String
@@ -359,6 +362,9 @@ const typeDefs = gql`
   almacen:ID
   nombre:String
   foto:String
+  servicios:[String]
+  marca:String
+  referencia:String
  }
  type Almacen{
   nombre:String

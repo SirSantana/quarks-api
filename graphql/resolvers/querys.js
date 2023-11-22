@@ -241,7 +241,7 @@ const querys = {
 
   },
   getOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: id }).sort({ fecha: -1 }).toArray()
+    const opiniones = await db.collection('Opinion').find({ almacen: ObjectId(id) }).sort({ fecha: -1 }).toArray()
     return opiniones
 
   },
@@ -251,7 +251,6 @@ const querys = {
 
     let calificacionQuarks = 0
     let opinionesQuarks = 0
-
     for (let i = 0; i < opiniones.length; i++) {
       if (opiniones[i]?.email.length > 0) {
         calificacionQuarks += opiniones[i].calificacion
