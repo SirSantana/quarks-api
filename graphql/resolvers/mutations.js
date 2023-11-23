@@ -638,8 +638,8 @@ const mutations = {
     await db.collection("Interesado").insertOne(data);
   },
   createOpinion: async (_, { input }, { db }) => {
-    const almacen = await db.collection("NegocioVDos").findOne({  userName: input.almacen})
-    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(almacen._id)}
+    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
+
     await db.collection("Opinion").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {

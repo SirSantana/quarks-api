@@ -246,8 +246,11 @@ const querys = {
 
   },
   getCalificacionOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: id }).toArray()
+    const opiniones = await db.collection('Opinion').find({ almacen: ObjectId(id) }).toArray()
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
+
+    console.log(opiniones);
+    console.log(taller);
 
     let calificacionQuarks = 0
     let opinionesQuarks = 0
