@@ -67,7 +67,7 @@ const start = async () => {
   let build3 = 'https://quarks-web-sirsantana.vercel.app'
 
   app.use(cors({
-    origin: [build, build2, desarrollo],
+    origin: [build, build2, build3],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
