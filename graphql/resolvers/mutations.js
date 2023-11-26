@@ -837,6 +837,21 @@ const mutations = {
       token: getToken(negocio),
     };
   },
-
+  editNegocioVDosRedes: async (_, { input}, { negocio, db }) => {
+    let res = await db
+        .collection("NegocioVDos")
+        .findOneAndUpdate(
+          {
+            _id: ObjectId(negocio._id),
+          },
+          {
+            $set: input,
+          },
+          {
+            returnDocument: "after",
+          }
+        );
+      return res.value
+  }
 };
 module.exports = mutations
