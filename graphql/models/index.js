@@ -60,8 +60,9 @@ const typeDefs = gql`
 
    getNegocioVDos:[NegocioVDos]
    getNegocioVDosOne:NegocioVDos
-   getOneNegocioVDos(id:ID):NegocioVDos
+   getOneNegocioVDos(userName:String):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
+   getServiciosNegocio(userName:String):NegocioVDos
 
    getConsumos:[Consumo]
    verifyAccountCheck(username:String):Boolean

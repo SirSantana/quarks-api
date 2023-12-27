@@ -241,7 +241,7 @@ const querys = {
 
   },
   getOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: ObjectId(id) }).sort({ fecha: -1 }).toArray()
+    const opiniones = await db.collection('Opinion').find({ almacen: id }).sort({ fecha: -1 }).toArray()
     return opiniones
 
   },
@@ -249,19 +249,17 @@ const querys = {
     const opiniones = await db.collection('Opinion').find({ almacen: ObjectId(id) }).toArray()
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
 
-    console.log(opiniones);
-    console.log(taller);
 
     let calificacionQuarks = 0
     let opinionesQuarks = 0
     for (let i = 0; i < opiniones.length; i++) {
       if (opiniones[i]?.email.length > 0) {
         calificacionQuarks += opiniones[i].calificacion
-        opinionesQuarks +=1
+        opinionesQuarks += 1
       }
     }
-    let promedioQuarks = calificacionQuarks??1 /opinionesQuarks??1
-    const sumaPromedio = (promedioQuarks??0 * opinionesQuarks??0) + (parseFloat(taller?.promediocalificacionesmaps ?? 0) *  parseFloat(taller?.numerocalificacionesmaps ?? 0));
+    let promedioQuarks = calificacionQuarks ?? 1 / opinionesQuarks ?? 1
+    const sumaPromedio = (promedioQuarks ?? 0 * opinionesQuarks ?? 0) + (parseFloat(taller?.promediocalificacionesmaps ?? 0) * parseFloat(taller?.numerocalificacionesmaps ?? 0));
     const sumaTotalNumeros = opinionesQuarks + parseFloat(taller?.numerocalificacionesmaps ?? 0);
     const promedioTotal = sumaPromedio / sumaTotalNumeros;
     if (promedioTotal > 0) {
@@ -300,10 +298,10 @@ const querys = {
       .toArray();
     return negociosVDos
   },
-  getOneNegocioVDos: async (_, { id }, { db }) => {
+  getOneNegocioVDos: async (_, { userName }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
-      .findOne({ userName: id })
+      .findOne({ userName: userName })
     return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
@@ -321,16 +319,18 @@ const querys = {
       .toArray();
     return consumos
   },
-  verifyAccountCheck: async (_, {username}, { db, negocio}) => {
+  verifyAccountCheck: async (_, { username }, { db, negocio }) => {
     let usernameParse = username.replace(/\s/g, '-').toLowerCase()
-   const isCreated=  await db.collection("NegocioVDos").findOne({userName:usernameParse})
-   if(isCreated){
-    return false
-   }
-   return true 
+    const isCreated = await db.collection("NegocioVDos").findOne({ userName: usernameParse })
+    if (isCreated) {
+      return false
+    }
+    return true
   },
   getNegocioVDosOne: async (_, __, { negocio }) => {
     return negocio;
+  },
+  getServiciosNegocio: async (_, { id }, { negocio }) => {
   },
 
 };
