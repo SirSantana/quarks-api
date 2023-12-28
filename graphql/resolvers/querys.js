@@ -245,8 +245,13 @@ const querys = {
     return opiniones
 
   },
+  getWhatsappNegocio: async (_, { id }, { db }) => {
+    const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
+    return taller.whatsapp
+
+  },
   getCalificacionOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: ObjectId(id) }).toArray()
+    const opiniones = await db.collection('Opinion').find({ almacen: id }).toArray()
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
 
 

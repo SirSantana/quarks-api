@@ -60,6 +60,7 @@ const typeDefs = gql`
 
    getNegocioVDos:[NegocioVDos]
    getNegocioVDosOne:NegocioVDos
+   getWhatsappNegocio(id:ID):String
    getOneNegocioVDos(userName:String):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
    getServiciosNegocio(userName:String):NegocioVDos

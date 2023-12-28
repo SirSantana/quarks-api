@@ -67,7 +67,7 @@ const start = async () => {
   let build3 = 'https://quarks-web-sirsantana.vercel.app'
 
   app.use(cors({
-    origin: [build, build2, build3],
+    origin: [build, build2, desarrollo],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
@@ -105,7 +105,6 @@ const start = async () => {
   await server.start();
   server.applyMiddleware({ app });
   const port = process.env.PORT || 4000;
-
   app.listen(port, () => {
     console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`);
   });
