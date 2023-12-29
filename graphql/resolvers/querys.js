@@ -241,7 +241,12 @@ const querys = {
 
   },
   getOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: id }).sort({ fecha: -1 }).toArray()
+    const opiniones = await db.collection('Opinion').find({
+      $or: [
+        { almacen: ObjectId(id) },
+        { almacen: id } // Puedes agregar más condiciones si es necesario
+      ]
+    }).sort({ fecha: -1 }).toArray()
     return opiniones
 
   },
@@ -251,8 +256,12 @@ const querys = {
 
   },
   getCalificacionOpiniones: async (_, { id }, { db }) => {
-    const opiniones = await db.collection('Opinion').find({ almacen: id }).toArray()
-    console.log(opiniones);
+    const opiniones = await db.collection('Opinion').find({
+      $or: [
+        { almacen: ObjectId(id) },
+        { almacen: id } // Puedes agregar más condiciones si es necesario
+      ]
+    }).toArray()
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
 
 
