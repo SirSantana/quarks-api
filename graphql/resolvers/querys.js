@@ -83,7 +83,12 @@ const querys = {
     return await db.collection("User").findOne({ _id: ObjectId(id) });
   },
   getUser: async (_, __, { user }) => {
-    return user;
+    try {
+      return user;
+    } catch (error) {
+      // Manejar errores y lanzar un error GraphQL
+      return new Error('No se pudo obtener el usuario');
+    }
   },
 
 
