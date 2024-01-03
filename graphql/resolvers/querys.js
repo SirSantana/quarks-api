@@ -297,6 +297,14 @@ const querys = {
       .toArray();
     return articulos;
   },
+  getArticulosBlog: async (_, __, { db }) => {
+    const articulos = await db
+      .collection("Articulos")
+      .find({blog:true})
+      .toArray();
+
+    return articulos;
+  },
   getArticulo: async (_, { id }, { db }) => {
     const articulo = await db
       .collection("Articulos")

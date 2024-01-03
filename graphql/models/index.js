@@ -56,6 +56,8 @@ const typeDefs = gql`
 
    getAllArticulos:[Articulo]
    getArticulo(id:ID):Articulo
+   getArticulosBlog:[Articulo]
+
    getVistasArticulo(id:ID):String
 
    getNegocioVDos:[NegocioVDos]
@@ -519,6 +521,7 @@ const typeDefs = gql`
   tema:String
   descripcion:String
   keywords:String
+  blog:Boolean
 
   tituloParrafoUno:String
   parrafoUno:String
