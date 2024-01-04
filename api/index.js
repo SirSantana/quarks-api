@@ -9,7 +9,7 @@ const typeDefs = require('../graphql/models')
 const mutations = require('../graphql/resolvers/mutations')
 const express = require('express');
 const cors = require('cors');
-
+const rateLimit = require('express-rate-limit');
 
 
 const URL = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.exgvi.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`
@@ -46,9 +46,6 @@ const getNegocioFromToken = async (token, db) => {
 }
 const start = async () => {
 
-
-
-
   const client = new MongoClient(URL, { useNewUrlParser: true, useUnifiedTopology: true })
   await client.connect()
   let totalIndexSize = 0;
@@ -58,20 +55,24 @@ const start = async () => {
   totalIndexSize += (stats.then(res => console.log(res.indexSize / (1024 * 1024 * 1024))));
   totalDataSize += (stats.then(res => console.log(res.dataSize / (1024 * 1024 * 1024))));
 
-
-
+  const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 20, // limit each IP to 100 requests per windowMs
+    
+  });
   const app = express();
-  // let desarrollo = 'http://localhost:3000'
+  let desarrollo = 'http://localhost:3000'
   let build = 'https://www.quarks.com.co'
   let build2 = 'https://www.cotizatusrepuestos.com'
   let build3 = 'https://quarks-web-sirsantana.vercel.app'
 
   app.use(cors({
-    origin: [build, build2, build3],
+    origin: [build, build2, desarrollo],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
   app.use(express.json({ limit: '2mb' }))
+  app.use(limiter);
   const server = new ApolloServer({
     typeDefs,
     resolvers: {
@@ -80,6 +81,7 @@ const start = async () => {
     },
     debug: true,
     introspection: false,
+    
     context:
     
       // async ({ req }) => {
