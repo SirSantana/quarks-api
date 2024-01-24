@@ -639,7 +639,6 @@ const mutations = {
   },
   createOpinion: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
-
     await db.collection("Opinion").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -737,6 +736,26 @@ const mutations = {
       },
       {
         $inc: { vecescompartido: 1 },
+      }
+    );
+  },
+  createClickNegocioPrevMap: async (_, { id }, { db }) => {
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { clicksnegocioprevmapa: 1 },
+      }
+    );
+  },
+  createClickNegocioMap: async (_, { id }, { db }) => {
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(id),
+      },
+      {
+        $inc: { clicksnegociomapa: 1 },
       }
     );
   },

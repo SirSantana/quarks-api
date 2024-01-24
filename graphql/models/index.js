@@ -124,6 +124,9 @@ const typeDefs = gql`
    createClickTelefono(id:ID):String
    createClickMapaDireccion(id:ID):String
    createClickCompartido(id:ID):String
+   createClickNegocioPrevMap(id:ID):String
+   createClickNegocioMap(id:ID):String
+
    
    createImpresionAlmacen(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
@@ -425,6 +428,8 @@ const typeDefs = gql`
   visitaswhatsapp:Int
   impresion:Int
   vecescompartido:Int
+  clicksnegociomapa:Int
+  clicksnegocioprevmapa:Int
   vecestelefono:Int
   visitasmapa:Int
   numerocalificacionesmaps:String

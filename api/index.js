@@ -68,7 +68,7 @@ const start = async () => {
   let buil4 = 'www.quarks.com.co'
 
   app.use(cors({
-    origin: [build, build2, build3, buil4],
+    origin: [build, build2, build3, buil4, ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
