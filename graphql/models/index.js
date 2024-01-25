@@ -130,10 +130,12 @@ const typeDefs = gql`
    
    createImpresionAlmacen(id:ID):String
    interesadoAlmacen(celular:String, name:String, fecha:Date, almacen:ID):String
-   interesadoAnuncio(name:String, celular:String):String
+   interesadoAnuncio(name:String, celular:String, fecha:Date, almacen:ID,  ):String
 
    createVistaArticulo(id:ID):String
    createTaller(input:CreateTallerInput):NegocioVDos
+   createSolicitudServicio(input:CreateSolicitudServicio):String
+
 
    createConsumo(fecha:String, galon:String, consumo:String):Consumo
    createNegocioVDos(email:String, password:String, username:String):AuthNegocioVDos
@@ -195,6 +197,16 @@ const typeDefs = gql`
   marca:String
   servicios:[String]
   referencia:String
+ }
+ input CreateSolicitudServicio{
+  nombre:String
+  marca:String
+  servicios:[String]
+  referencia:String
+  celular:String
+  almacen:ID
+  descripcion:String
+  fecha:Date
  }
  input VendedorEditInput{
   name:String
@@ -272,6 +284,18 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Revision{
+   description:String
+   id:ID
+   fecha:Date
+   almacen:ID
+   nombre:String
+   servicios:[String]
+   marca:String
+   referencia:String
+   celular:String
+
  }
  type Batalla{
   id:ID
