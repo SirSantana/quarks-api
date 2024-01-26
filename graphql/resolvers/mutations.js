@@ -642,7 +642,7 @@ const mutations = {
     await db.collection("Opinion").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
-        userName: input.almacen,
+        _id: ObjectId(input.almacen),
       },
       {
         $push: {
