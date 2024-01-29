@@ -403,6 +403,7 @@ const typeDefs = gql`
   servicios:[String]
   marca:String
   referencia:String
+  pagina:String
  }
  type Almacen{
   nombre:String
