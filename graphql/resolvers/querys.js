@@ -255,6 +255,11 @@ const querys = {
     return opiniones
 
   },
+  getRevisiones: async (_, { id }, { db }) => {
+    const revisiones = await db.collection('Revision').find({almacen: ObjectId(id)}).sort({ fecha: -1 }).toArray()
+    return revisiones
+
+  },
   getWhatsappNegocio: async (_, { id }, { db }) => {
     const taller = await db.collection('NegocioVDos').findOne({ _id: ObjectId(id) })
     return taller.whatsapp

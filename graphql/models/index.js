@@ -52,6 +52,7 @@ const typeDefs = gql`
    getBatallas:[Batalla]
    getOpiniones(id:ID):[Opinion]
    getCalificacionOpiniones(id:ID):String
+   getRevisiones(id:ID):[Revision]
 
 
    getAllArticulos:[Articulo]
@@ -286,7 +287,7 @@ const typeDefs = gql`
    fecha:Date
  }
  type Revision{
-   description:String
+   descripcion:String
    id:ID
    fecha:Date
    almacen:ID
@@ -465,6 +466,7 @@ const typeDefs = gql`
   marcasAutos:[String]
   email:String
   password:String
+  revisiones:[ID]
 
  }
  input CreateVehiculeInput{

@@ -48,6 +48,9 @@ const querys = require('./querys');
     NegocioVDos:{
       id: ({ _id, id }) => _id || id,
     },
+    Revision:{
+      id: ({ _id, id }) => _id || id,
+    },
   
   
   };
