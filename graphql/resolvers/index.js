@@ -51,8 +51,9 @@ const querys = require('./querys');
     Revision:{
       id: ({ _id, id }) => _id || id,
     },
-  
-  
+    Accion:{
+      id: ({ _id, id }) => _id || id,
+    }
   };
 
 module.exports = resolvers

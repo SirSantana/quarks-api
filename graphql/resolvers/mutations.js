@@ -666,6 +666,20 @@ const mutations = {
       }
     )
   },
+  createAccion: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
+    await db.collection("Accion").insertOne(newInput);
+    await db.collection("NegocioVDos").updateOne(
+      {
+        _id: ObjectId(input.almacen),
+      },
+      {
+        $push: {
+          acciones: newInput._id,
+        },
+      }
+    )
+  },
   createVisitaAlmacen: async (_, { id }, { db }) => {
     await db.collection("NegocioVDos").updateOne(
       {

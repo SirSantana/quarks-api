@@ -136,6 +136,8 @@ const typeDefs = gql`
    createVistaArticulo(id:ID):String
    createTaller(input:CreateTallerInput):NegocioVDos
    createSolicitudServicio(input:CreateSolicitudServicio):String
+   createAccion(input:CreateAccion):String
+
 
 
    createConsumo(fecha:String, galon:String, consumo:String):Consumo
@@ -208,6 +210,12 @@ const typeDefs = gql`
   almacen:ID
   descripcion:String
   fecha:Date
+ }
+ input CreateAccion{
+  tipo:String
+  almacen:ID
+  fecha:Date
+  estado:String
  }
  input VendedorEditInput{
   name:String
@@ -296,7 +304,14 @@ const typeDefs = gql`
    marca:String
    referencia:String
    celular:String
-
+ }
+ type Accion{
+   id:ID
+   fecha:Date
+   almacen:ID
+   tipo:String
+   estado:String
+   servicios:[String]
  }
  type Batalla{
   id:ID
