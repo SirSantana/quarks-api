@@ -899,6 +899,10 @@ const mutations = {
           }
         );
       return res.value
-  }
+  },
+  createSugerencia: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date()}
+    await db.collection("Sugerencia").insertOne(newInput);
+  },
 };
 module.exports = mutations

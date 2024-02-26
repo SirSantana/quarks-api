@@ -57,7 +57,7 @@ const start = async () => {
 
   const limiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 20, // limit each IP to 100 requests per windowMs
+    max: 40, // limit each IP to 100 requests per windowMs
     
   });
   const app = express();

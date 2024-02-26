@@ -53,7 +53,7 @@ const querys = require('./querys');
     },
     Accion:{
       id: ({ _id, id }) => _id || id,
-    }
+    },
   };
 
 module.exports = resolvers

@@ -365,7 +365,14 @@ const querys = {
   },
   getServiciosNegocio: async (_, { id }, { negocio }) => {
   },
-
+  getAllAdminAccion: async (_, __, { db }) => {
+    const Acciones = await db
+      .collection("Accion")
+      .find()
+      .sort({ fecha: -1 })
+      .toArray();
+    return Acciones
+  },
 };
 
 module.exports = querys;

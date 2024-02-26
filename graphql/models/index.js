@@ -68,6 +68,11 @@ const typeDefs = gql`
    getStadisticsHalfMonth(id:ID):NegocioVDos
    getServiciosNegocio(userName:String):NegocioVDos
 
+
+   getAllAdminAccion:[Accion]
+   getAccionNegocio(id:ID):[Accion]
+
+
    getConsumos:[Consumo]
    verifyAccountCheck(username:String):Boolean
 
@@ -118,7 +123,9 @@ const typeDefs = gql`
 
    interesadoPremium(nombre:String, email:String):String
 
+   createSugerencia(input:CreateSugerenciaInput):String
    
+
    createOpinion(input:CreateOpinionInput):Opinion
    createVisitaAlmacen(id:ID):String
    createVisitaWhatsapp(id:ID):String
@@ -165,6 +172,11 @@ const typeDefs = gql`
   categorias:[String]
   fecha:Date
   horario:String
+ }
+ input CreateSugerenciaInput{
+  tipo:String
+  sugerencia:String
+  fecha:Date
  }
  input EditNegocioInput{
   direccion:String
