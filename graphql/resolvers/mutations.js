@@ -638,7 +638,7 @@ const mutations = {
     await db.collection("Interesado").insertOne(data);
   },
   createOpinion: async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
+    const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
     await db.collection("Opinion").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -653,7 +653,7 @@ const mutations = {
     return newInput
   },
   createSolicitudServicio: async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
+    const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
     await db.collection("Revision").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -667,7 +667,7 @@ const mutations = {
     )
   },
   createAccion: async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date(), almacen:ObjectId(input.almacen)}
+    const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
     await db.collection("Accion").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -809,12 +809,12 @@ const mutations = {
 
     if (userExists) {
       if (userExists.userName === username) {
-        return new Error('Ya existe un negocio con ese nombre. Prueba otro.');
+        return new Error('Ya existe un usuario con ese nombre. Prueba otro.');
       } else {
-        return new Error('Ya existe un negocio con ese correo. Prueba otro.');
+        return new Error('Ya existe un usuario con ese correo. Prueba otro.');
       }
     }
-    const newInput = { email, password: await bcrypt.hash(password, 10), userName: username.replace(/\s/g, '-').toLowerCase(), nombre:username }
+    const newInput = { email, password: await bcrypt.hash(password, 10), userName: username.replace(/\s/g, '-').toLowerCase(), nombre: username }
 
     const res = await db.collection("NegocioVDos").insertOne(newInput);
 
@@ -827,81 +827,69 @@ const mutations = {
       token: getToken(negocio),
     };
   },
-  editNegocioVDos: async (_, { input}, { negocio, db }) => {
-    console.log(input, 'input232');
+  editNegocioVDos: async (_, { input }, { negocio, db }) => {
     let newInputImage;
-    let res;
-    if (input?.fotoperfil) {
-      let container = process.env.AZURE_CONTAINER_PARTS
-      let nameFile = new Date().getTime()
-      await AzureUpload({ container, file: input.fotoperfil, nameFile })
-      newInputImage = await { ...input, fotoperfil: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
-      res = await db
-        .collection("NegocioVDos")
-        .findOneAndUpdate(
-          {
-            _id: ObjectId(negocio._id),
-          },
-          {
-            $set: newInputImage,
-          },
-          {
-            returnDocument: "after",
-          }
-        );
-      return res.value
-
-    } else {
-      res = await db
-        .collection("NegocioVDos")
-        .findOneAndUpdate(
-          {
-            _id: ObjectId(negocio._id),
-          },
-          {
-            $set: input,
-          },
-          {
-            returnDocument: "after",
-          }
-        );
-      return res.value
+    const userExists = await db.collection("NegocioVDos").findOne({
+      $or: [
+        { userName: input.userName },
+        { email: input.email }
+      ]
+    });
+    if (userExists) {
+      if (userExists.userName === input.userName) {
+        return new Error('Ya existe un usuario con ese nombre. Prueba otro.');
+      } else {
+        return new Error('Ya existe un usuario con ese correo. Prueba otro.');
+      }
     }
-    
+    // const res1 = await db.collection("NegocioVDos").insertOne(newInput);
+
+    let container = process.env.AZURE_CONTAINER_PARTS
+    let nameFile = new Date().getTime()
+    await AzureUpload({ container, file: input.fotoperfil, nameFile })
+    newInputImage = await { ...input,fechaCreated:new Date(),fotoperfil: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+    delete newInputImage.username;
+    await db
+      .collection("NegocioVDos")
+      .insertOne(
+        newInputImage
+      );
+    return newInputImage
+
   },
 
   signInNegocio: async (_, { email, password, }, { db }) => {
     const negocio = await db.collection("NegocioVDos").findOne({ email: email });
     const isPasswordCorrect =
-    negocio && bcrypt.compareSync(password, negocio.password);
+      negocio && bcrypt.compareSync(password, negocio.password);
 
     if (!negocio || !isPasswordCorrect) {
       throw new Error("Datos Invalidos. Revisa tu Correo y Contraseña");
     }
-    
+
     return {
       negocio,
       token: getToken(negocio),
     };
   },
-  editNegocioVDosRedes: async (_, { input}, { negocio, db }) => {
+  editNegocioVDosRedes: async (_, { input }, { negocio, db }) => {
     let res = await db
-        .collection("NegocioVDos")
-        .findOneAndUpdate(
-          {
-            _id: ObjectId(negocio._id),
-          },
-          {
-            $set: input,
-          },
-          {
-            returnDocument: "after",
-          }
-        );
-      return res.value
+      .collection("NegocioVDos")
+      .findOneAndUpdate(
+        {
+          _id: ObjectId(negocio._id),
+        },
+        {
+          $set: input,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+    return res.value
   },
   createSugerencia: async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date()}
+    const newInput = { ...input, fecha: new Date() }
     await db.collection("Sugerencia").insertOne(newInput);
   },
 };

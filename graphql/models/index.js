@@ -63,6 +63,7 @@ const typeDefs = gql`
 
    getNegocioVDos:[NegocioVDos]
    getNegocioVDosOne:NegocioVDos
+   getNegocioVDosByEmail(email:String):String
    getWhatsappNegocio(id:ID):String
    getOneNegocioVDos(userName:String):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
@@ -74,7 +75,7 @@ const typeDefs = gql`
 
 
    getConsumos:[Consumo]
-   verifyAccountCheck(username:String):Boolean
+   verifyAccountCheck(userName:String):Boolean
 
  }
 
@@ -188,6 +189,14 @@ const typeDefs = gql`
   fotoperfil:String
   categorias:[String]
   nombre:String
+
+  email:String
+  indicativo:String
+  tipo:String
+  vehiculo:String
+  coordenadas:[Float]
+  userName:String
+
  }
  input EditNegocioInputRedes{
   facebook:String
@@ -494,7 +503,11 @@ const typeDefs = gql`
   email:String
   password:String
   revisiones:[ID]
-
+  vehiculo:String
+  coordenadas:[Float]
+  fechaCreated:Date
+  indicativo:String
+  
  }
  input CreateVehiculeInput{
    tipo:String

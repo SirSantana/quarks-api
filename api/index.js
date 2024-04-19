@@ -73,7 +73,7 @@ const start = async () => {
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
   app.use(express.json({ limit: '2mb' }))
-  app.use(limiter);
+  // app.use(limiter);
   const server = new ApolloServer({
     typeDefs,
     resolvers: {

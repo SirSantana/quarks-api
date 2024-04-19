@@ -256,7 +256,7 @@ const querys = {
 
   },
   getRevisiones: async (_, { id }, { db }) => {
-    const revisiones = await db.collection('Revision').find({almacen: ObjectId(id)}).sort({ fecha: -1 }).toArray()
+    const revisiones = await db.collection('Revision').find({ almacen: ObjectId(id) }).sort({ fecha: -1 }).toArray()
     return revisiones
 
   },
@@ -305,7 +305,7 @@ const querys = {
   getArticulosBlog: async (_, __, { db }) => {
     const articulos = await db
       .collection("Articulos")
-      .find({blog:true})
+      .find({ blog: true })
       .toArray();
 
     return articulos;
@@ -337,6 +337,12 @@ const querys = {
       .findOne({ userName: userName })
     return negociosVDos
   },
+  getNegocioVDosByEmail: async (_, { email }, { db }) => {
+    const negociosVDos = await db
+      .collection("NegocioVDos")
+      .findOne({ email: email })
+    return negociosVDos.userName
+  },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
@@ -352,13 +358,13 @@ const querys = {
       .toArray();
     return consumos
   },
-  verifyAccountCheck: async (_, { username }, { db, negocio }) => {
-    let usernameParse = username.replace(/\s/g, '-').toLowerCase()
+  verifyAccountCheck: async (_, { userName }, { db, negocio }) => {
+    let usernameParse = userName.replace(/\s/g, '-').toLowerCase()
     const isCreated = await db.collection("NegocioVDos").findOne({ userName: usernameParse })
     if (isCreated) {
-      return false
+      return true
     }
-    return true
+    return false
   },
   getNegocioVDosOne: async (_, __, { negocio }) => {
     return negocio;
