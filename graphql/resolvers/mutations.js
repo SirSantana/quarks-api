@@ -654,6 +654,7 @@ const mutations = {
   },
   createSolicitudServicio: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
+    
     await db.collection("Revision").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -873,14 +874,21 @@ const mutations = {
     };
   },
   editNegocioVDosRedes: async (_, { input }, { negocio, db }) => {
+    const filteredData = Object.keys(input).reduce((acc, key) => {
+      if (input[key] !== null) {
+        acc[key] = input[key];
+      }
+      return acc;
+    }, {});
+    delete filteredData.email
     let res = await db
       .collection("NegocioVDos")
       .findOneAndUpdate(
         {
-          _id: ObjectId(negocio._id),
+          email:input.email,
         },
         {
-          $set: input,
+          $set: filteredData,
         },
         {
           returnDocument: "after",
@@ -888,6 +896,7 @@ const mutations = {
       );
     return res.value
   },
+  
   createSugerencia: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("Sugerencia").insertOne(newInput);

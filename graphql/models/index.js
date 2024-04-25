@@ -153,6 +153,7 @@ const typeDefs = gql`
    editNegocioVDos(input:EditNegocioInput):NegocioVDos
    editNegocioVDosRedes(input:EditNegocioInputRedes):NegocioVDos
 
+
    signInNegocio(email:String, password:String):AuthNegocioVDos
  }
  
@@ -202,7 +203,21 @@ const typeDefs = gql`
   facebook:String
   instagram:String
   paginaweb:String
+  direccion:String
+  ciudad:String
+  pais:String
+  whatsapp:String
+  telefono:String
+  horario:String
+  nombre:String
+  indicativo:String
+  coordenadas:[Float]
+  email:String
+  fotoperfil:String
+  categorias:[String]
+
  }
+
  input AddEmailInput{
   email:String
   password:String
