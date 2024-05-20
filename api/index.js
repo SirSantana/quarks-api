@@ -41,7 +41,7 @@ const getNegocioFromToken = async (token, db) => {
   if (!tokenData?.id) {
     return null;
   }
-  const negocio=  await db.collection('NegocioVDos').findOne({ _id: ObjectId(tokenData?.id) });
+  const negocio = await db.collection('NegocioVDos').findOne({ _id: ObjectId(tokenData?.id) });
   return negocio
 }
 const start = async () => {
@@ -51,14 +51,28 @@ const start = async () => {
   let totalIndexSize = 0;
   let totalDataSize = 0;
   const db = client.db('quarks')
-  let stats = db.stats();
-  totalIndexSize += (stats.then(res => console.log(res.indexSize / (1024 * 1024 * 1024))));
-  totalDataSize += (stats.then(res => console.log(res.dataSize / (1024 * 1024 * 1024))));
+
+  // TTL INDEXES 
+  // const collection = db.collection('ReportePriceGasolinera');
+  // // const indexes = await collection.indexes();
+
+  // await collection.dropIndex('fecha_1');
+  // console.log('Índice TTL existente eliminado.');
+
+  // //add TTL
+  // await collection.createIndex(
+  //   { fecha: 1 },
+  //   { expireAfterSeconds: 15 * 24 * 60 * 60 } // 30 días en segundos
+  // );
+  
+  // let stats = db.stats();
+  // totalIndexSize += (stats.then(res => console.log(res.indexSize / (1024 * 1024 * 1024))));
+  // totalDataSize += (stats.then(res => console.log(res.dataSize / (1024 * 1024 * 1024))));
 
   const limiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 40, // limit each IP to 100 requests per windowMs
-    
+
   });
   const app = express();
   let desarrollo = 'http://localhost:3000'
@@ -68,7 +82,7 @@ const start = async () => {
   let buil4 = 'www.quarks.com.co'
 
   app.use(cors({
-    origin: [build, build2, build3, buil4],
+    origin: [build, build2, build3, buil4, ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
@@ -82,9 +96,9 @@ const start = async () => {
     },
     debug: true,
     introspection: false,
-    
+
     context:
-    
+
       // async ({ req }) => {
       //   console.log('req',req.headers.authorization);
       //   const user = await getUserFromToken(req.headers.authorization, db);

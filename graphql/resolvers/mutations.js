@@ -901,5 +901,9 @@ const mutations = {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("Sugerencia").insertOne(newInput);
   },
+  createReportPrice: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date() }
+    await db.collection("ReportePriceGasolinera").insertOne(newInput);
+  },
 };
 module.exports = mutations

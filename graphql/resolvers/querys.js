@@ -379,6 +379,28 @@ const querys = {
       .toArray();
     return Acciones
   },
+  getReportsPrice: async (_, { gasolinera }, { db }) => {
+    const reporteCorriente = await db
+      .collection("ReportePriceGasolinera")
+      .find({ gasolinera: gasolinera, combustible: 'Corriente' })
+      .sort({ fecha: -1 })
+      .limit(1)
+      .toArray();
+
+    const reporteExtra = await db
+      .collection("ReportePriceGasolinera")
+      .find({ gasolinera: gasolinera, combustible: 'Extra' })
+      .sort({ fecha: -1 })
+      .limit(1)
+      .toArray();
+
+    const reportes = [
+      reporteCorriente[0] || null,
+      reporteExtra[0] || null
+    ];
+
+    return reportes;
+  },
 };
 
 module.exports = querys;

@@ -68,6 +68,8 @@ const typeDefs = gql`
    getOneNegocioVDos(userName:String):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
    getServiciosNegocio(userName:String):NegocioVDos
+   getReportsPrice(gasolinera:String):[ReportePriceGasolinera]
+
 
 
    getAllAdminAccion:[Accion]
@@ -155,6 +157,9 @@ const typeDefs = gql`
 
 
    signInNegocio(email:String, password:String):AuthNegocioVDos
+
+   createReportPrice(input:CreateReportPriceInput):String
+
  }
  
  
@@ -164,6 +169,16 @@ const typeDefs = gql`
    avatar:String
    ciudad:String
    pais:String
+ }
+ input CreateReportPriceInput{
+   nombre:String
+   precio:String
+   fecha:Date
+   votoP:Int
+   votoN:Int
+   email:String 
+   gasolinera:String 
+   combustible:String
  }
  input CreateTallerInput{
   nombre:String
@@ -329,6 +344,17 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type ReportePriceGasolinera{
+  combustible:String
+  precio:String
+  fecha:Date
+  votoP:Int
+  votoN:Int
+  email:String
+  nombre:String
+  gasolinera:String
+  id:ID
  }
  type Revision{
    descripcion:String
