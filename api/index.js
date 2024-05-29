@@ -11,7 +11,6 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 
-
 const URL = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.exgvi.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`
 
 
@@ -82,7 +81,7 @@ const start = async () => {
   let buil4 = 'www.quarks.com.co'
 
   app.use(cors({
-    origin: [build, build2, build3, buil4, ],
+    origin: [build, build2, build3, buil4, desarrollo],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
@@ -96,7 +95,7 @@ const start = async () => {
     },
     debug: true,
     introspection: false,
-
+    
     context:
 
       // async ({ req }) => {

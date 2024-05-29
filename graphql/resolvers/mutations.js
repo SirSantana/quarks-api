@@ -905,5 +905,51 @@ const mutations = {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("ReportePriceGasolinera").insertOne(newInput);
   },
+  createLavadero:async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date() }
+    const userExists = await db.collection("NegocioVDos").findOne({
+      $or: [
+        { userName: input.userName },
+        { email: input.email }
+      ]
+    });
+    if (userExists) {
+      if (userExists.userName === input.userName) {
+        return new Error('Ya existe un usuario con ese nombre. Prueba otro.');
+      } else {
+        return new Error('Ya existe un usuario con ese correo. Prueba otro.');
+      }
+    }
+    await db.collection("NegocioVDos").insertOne(newInput);
+    return newInput
+  },
+  createTicketLavado:async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }), negocio: ObjectId(input.negocio)}
+    await db.collection("TicketLavado").insertOne(newInput);
+    return newInput
+  },
+  editTicketLavado:async (_, { input }, { db }) => {
+    const filteredData = Object.keys(input).reduce((acc, key) => {
+      if (input[key] !== null) {
+        acc[key] = input[key];
+      }
+      return acc;
+    }, {});
+    delete filteredData.id
+    let res = await db
+      .collection("TicketLavado")
+      .findOneAndUpdate(
+        {
+          _id:ObjectId(input.id),
+        },
+        {
+          $set: filteredData,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
+    return res.value
+  },
 };
 module.exports = mutations

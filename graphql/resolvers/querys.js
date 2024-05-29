@@ -343,6 +343,12 @@ const querys = {
       .findOne({ email: email })
     return negociosVDos.userName
   },
+  getNegocioVDosByEmailDos: async (_, { email }, { db }) => {
+    const negociosVDos = await db
+      .collection("NegocioVDos")
+      .findOne({ email: email })
+    return negociosVDos
+  },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
@@ -400,6 +406,21 @@ const querys = {
     ];
 
     return reportes;
+  },
+  getTicketsNegocio: async (_, {negocio}, { db }) => {
+    console.log(negocio, 'giga');
+    const Lavadas = await db
+      .collection("TicketLavado")
+      .find({ negocio: ObjectId(negocio)})
+      .sort({ fecha: -1 })
+      .toArray();
+    return Lavadas
+  },
+  getTicketLavado: async (_, {id}, { db }) => {
+    const Lavada = await db
+      .collection("TicketLavado")
+      .findOne({ _id: ObjectId(id)})
+    return Lavada
   },
 };
 

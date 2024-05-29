@@ -56,6 +56,9 @@ const querys = require('./querys');
     },
     ReportePriceGasolinera:{
       id: ({ _id, id }) => _id || id,
+    },
+    TicketLavado:{
+      id: ({ _id, id }) => _id || id,
     }
   };
 

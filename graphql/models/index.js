@@ -64,11 +64,17 @@ const typeDefs = gql`
    getNegocioVDos:[NegocioVDos]
    getNegocioVDosOne:NegocioVDos
    getNegocioVDosByEmail(email:String):String
+   getNegocioVDosByEmailDos(email:String):NegocioVDos
    getWhatsappNegocio(id:ID):String
    getOneNegocioVDos(userName:String):NegocioVDos
    getStadisticsHalfMonth(id:ID):NegocioVDos
    getServiciosNegocio(userName:String):NegocioVDos
    getReportsPrice(gasolinera:String):[ReportePriceGasolinera]
+
+   getTicketsNegocio(negocio:String):[TicketLavado]
+   getTicketLavado(id:ID):TicketLavado
+
+
 
 
 
@@ -159,9 +165,11 @@ const typeDefs = gql`
    signInNegocio(email:String, password:String):AuthNegocioVDos
 
    createReportPrice(input:CreateReportPriceInput):String
-
+   createLavadero(input:CreateLavaderoInput):NegocioVDos
+   createTicketLavado(input:CreateTicketInput):TicketLavado
+   editTicketLavado(input:EditTicketInput):TicketLavado
  }
- 
+
  
  input UserInput{
    name:String
@@ -179,6 +187,35 @@ const typeDefs = gql`
    email:String 
    gasolinera:String 
    combustible:String
+ }
+ input CreateLavaderoInput{
+   nombre:String
+   direccion:String
+   fecha:Date
+   whatsapp:String
+   email:String
+   userName:String
+   tipo:String
+ }
+ input CreateTicketInput{
+  marca:String
+  modelo:String
+  fecha:Date
+  negocio:String
+  whatsapp:String
+  status:Int
+  autolavado:String
+  whatsappAutolavado:String
+  tiempoEstimado:String
+
+ }
+
+ input EditTicketInput{
+  marca:String
+  modelo:String
+  id:String  
+  whatsapp:String
+  status:Int
  }
  input CreateTallerInput{
   nombre:String
@@ -403,6 +440,19 @@ const typeDefs = gql`
   fecha:String
   consumo:String
   galon:String
+ }
+ 
+ type TicketLavado{
+  fecha:String
+  marca:String
+  modelo:String
+  negocio:ID
+  whatsapp:String
+  autolavado:String
+  whatsappAutolavado:String
+  status:Int
+  id:ID
+  tiempoEstimado:String
  }
  type Cotizacion{
   descripcion:String
