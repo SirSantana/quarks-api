@@ -408,7 +408,6 @@ const querys = {
     return reportes;
   },
   getTicketsNegocio: async (_, {negocio}, { db }) => {
-    console.log(negocio, 'giga');
     const Lavadas = await db
       .collection("TicketLavado")
       .find({ negocio: ObjectId(negocio)})
