@@ -349,6 +349,7 @@ const querys = {
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ email: email })
+      console.log(negociosVDos, 'negociosVDos')
     return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
