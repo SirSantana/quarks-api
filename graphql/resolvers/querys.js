@@ -338,12 +338,14 @@ const querys = {
     return negociosVDos
   },
   getNegocioVDosByEmail: async (_, { email }, { db }) => {
+
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ email: email })
     return negociosVDos.userName
   },
   getNegocioVDosByEmailDos: async (_, { email }, { db }) => {
+    console.log(email, 'email')
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ email: email })
