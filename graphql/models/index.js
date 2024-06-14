@@ -168,6 +168,7 @@ const typeDefs = gql`
    createLavadero(input:CreateLavaderoInput):NegocioVDos
    createTicketLavado(input:CreateTicketInput):TicketLavado
    editTicketLavado(input:EditTicketInput):TicketLavado
+   deleteTicketLavado(id:ID!):String
  }
 
  

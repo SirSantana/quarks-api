@@ -345,11 +345,9 @@ const querys = {
     return negociosVDos.userName
   },
   getNegocioVDosByEmailDos: async (_, { email }, { db }) => {
-    console.log(email, 'email')
     const negociosVDos = await db
       .collection("NegocioVDos")
       .findOne({ email: email })
-      console.log(negociosVDos, 'negociosVDos')
     return negociosVDos
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {

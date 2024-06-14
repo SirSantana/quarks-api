@@ -654,7 +654,7 @@ const mutations = {
   },
   createSolicitudServicio: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
-    
+
     await db.collection("Revision").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {
@@ -848,7 +848,7 @@ const mutations = {
     let container = process.env.AZURE_CONTAINER_PARTS
     let nameFile = new Date().getTime()
     await AzureUpload({ container, file: input.fotoperfil, nameFile })
-    newInputImage = await { ...input,fechaCreated:new Date(),fotoperfil: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
+    newInputImage = await { ...input, fechaCreated: new Date(), fotoperfil: `https://${process.env.AZURE_ACCOUNT}.blob.core.windows.net/${container}/${nameFile}` }
     delete newInputImage.username;
     await db
       .collection("NegocioVDos")
@@ -885,7 +885,7 @@ const mutations = {
       .collection("NegocioVDos")
       .findOneAndUpdate(
         {
-          email:input.email,
+          email: input.email,
         },
         {
           $set: filteredData,
@@ -896,7 +896,7 @@ const mutations = {
       );
     return res.value
   },
-  
+
   createSugerencia: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("Sugerencia").insertOne(newInput);
@@ -905,7 +905,7 @@ const mutations = {
     const newInput = { ...input, fecha: new Date() }
     await db.collection("ReportePriceGasolinera").insertOne(newInput);
   },
-  createLavadero:async (_, { input }, { db }) => {
+  createLavadero: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date() }
     const userExists = await db.collection("NegocioVDos").findOne({
       $or: [
@@ -923,12 +923,12 @@ const mutations = {
     await db.collection("NegocioVDos").insertOne(newInput);
     return newInput
   },
-  createTicketLavado:async (_, { input }, { db }) => {
-    const newInput = { ...input, fecha: new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }), negocio: ObjectId(input.negocio)}
+  createTicketLavado: async (_, { input }, { db }) => {
+    const newInput = { ...input, fecha: new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }), negocio: ObjectId(input.negocio) }
     await db.collection("TicketLavado").insertOne(newInput);
     return newInput
   },
-  editTicketLavado:async (_, { input }, { db }) => {
+  editTicketLavado: async (_, { input }, { db }) => {
     const filteredData = Object.keys(input).reduce((acc, key) => {
       if (input[key] !== null) {
         acc[key] = input[key];
@@ -940,7 +940,7 @@ const mutations = {
       .collection("TicketLavado")
       .findOneAndUpdate(
         {
-          _id:ObjectId(input.id),
+          _id: ObjectId(input.id),
         },
         {
           $set: filteredData,
@@ -951,5 +951,10 @@ const mutations = {
       );
     return res.value
   },
+  deleteTicketLavado: async (_, { id }, { db }) => {
+    if (!id) throw new Error('Ha ocurrido un error')
+    await db.collection("TicketLavado").deleteOne({ _id: ObjectId(id) });
+    return 'Eliminado'
+  }
 };
 module.exports = mutations
