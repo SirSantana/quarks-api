@@ -350,6 +350,11 @@ const querys = {
       .findOne({ email: email })
     return negociosVDos
   },
+  getNegociosVDosByTipo: async (_, {tipo}, {db,  }) => {
+    const negociosVDos = await db.collection('NegocioVDos').find({tipo: tipo}).toArray()
+    console.log(negociosVDos, 'neg');
+    return negociosVDos;
+  },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")
@@ -376,6 +381,7 @@ const querys = {
   getNegocioVDosOne: async (_, __, { negocio }) => {
     return negocio;
   },
+ 
   getServiciosNegocio: async (_, { id }, { negocio }) => {
   },
   getAllAdminAccion: async (_, __, { db }) => {
@@ -386,6 +392,8 @@ const querys = {
       .toArray();
     return Acciones
   },
+
+  //HACER UN GET Y FILTRAR POR EL TIPO CDA
   getReportsPrice: async (_, { gasolinera }, { db }) => {
     const reporteCorriente = await db
       .collection("ReportePriceGasolinera")
