@@ -355,6 +355,22 @@ const querys = {
     console.log(negociosVDos, 'neg');
     return negociosVDos;
   },
+  getNegociosVDosByServicio: async (_, {tipo}, {db,  }) => {
+    const tipoRegex = new RegExp(tipo, 'i');
+    console.log(tipo, 'tipo');
+    // const negociosVDos = await db.collection('NegocioVDos').find({tipo: tipo}).toArray()
+    const negociosVDos = await db.collection('NegocioVDos').find({
+      $or: [
+        { tipo: tipoRegex },
+        { categorias: { $regex: tipoRegex } },
+        { nombre: { $regex: tipoRegex } },
+        { marcasAutos: { $in: [tipoRegex] } }
+
+      ]
+    }).toArray()
+    console.log(negociosVDos, 'neg');
+    return negociosVDos;
+  },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
     const negociosVDos = await db
       .collection("NegocioVDos")

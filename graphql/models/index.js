@@ -68,6 +68,9 @@ const typeDefs = gql`
    getWhatsappNegocio(id:ID):String
    getOneNegocioVDos(userName:String):NegocioVDos
    getNegociosVDosByTipo(tipo:String):[NegocioVDos]
+   getNegociosVDosByServicio(tipo:String):[NegocioVDos]
+
+   
 
    getStadisticsHalfMonth(id:ID):NegocioVDos
    getServiciosNegocio(userName:String):NegocioVDos

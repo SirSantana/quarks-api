@@ -82,7 +82,7 @@ const start = async () => {
   let build5 = 'https://wash-dash.vercel.app'
 
   app.use(cors({
-    origin: [build, build2, build3, build4, build5],
+    origin: [build, build2, build3, build4, build5, ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
