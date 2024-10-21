@@ -70,6 +70,8 @@ const typeDefs = gql`
    getNegociosVDosByTipo(tipo:String):[NegocioVDos]
    getNegociosVDosByServicio(tipo:String):[NegocioVDos]
 
+   getSearch(text:String):[NegocioVDos]
+
    
 
    getStadisticsHalfMonth(id:ID):NegocioVDos
@@ -304,6 +306,7 @@ const typeDefs = gql`
   almacen:ID
   descripcion:String
   fecha:Date
+  indicativo:String
  }
  input CreateAccion{
   tipo:String

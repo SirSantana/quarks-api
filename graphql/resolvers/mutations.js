@@ -654,7 +654,6 @@ const mutations = {
   },
   createSolicitudServicio: async (_, { input }, { db }) => {
     const newInput = { ...input, fecha: new Date(), almacen: ObjectId(input.almacen) }
-
     await db.collection("Revision").insertOne(newInput);
     await db.collection("NegocioVDos").updateOne(
       {

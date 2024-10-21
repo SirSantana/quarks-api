@@ -350,14 +350,12 @@ const querys = {
       .findOne({ email: email })
     return negociosVDos
   },
-  getNegociosVDosByTipo: async (_, {tipo}, {db,  }) => {
-    const negociosVDos = await db.collection('NegocioVDos').find({tipo: tipo}).toArray()
-    console.log(negociosVDos, 'neg');
+  getNegociosVDosByTipo: async (_, { tipo }, { db, }) => {
+    const negociosVDos = await db.collection('NegocioVDos').find({ tipo: tipo }).toArray()
     return negociosVDos;
   },
-  getNegociosVDosByServicio: async (_, {tipo}, {db,  }) => {
+  getNegociosVDosByServicio: async (_, { tipo }, { db, }) => {
     const tipoRegex = new RegExp(tipo, 'i');
-    console.log(tipo, 'tipo');
     // const negociosVDos = await db.collection('NegocioVDos').find({tipo: tipo}).toArray()
     const negociosVDos = await db.collection('NegocioVDos').find({
       $or: [
@@ -368,7 +366,6 @@ const querys = {
 
       ]
     }).toArray()
-    console.log(negociosVDos, 'neg');
     return negociosVDos;
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {
@@ -397,7 +394,7 @@ const querys = {
   getNegocioVDosOne: async (_, __, { negocio }) => {
     return negocio;
   },
- 
+
   getServiciosNegocio: async (_, { id }, { negocio }) => {
   },
   getAllAdminAccion: async (_, __, { db }) => {
@@ -432,20 +429,60 @@ const querys = {
 
     return reportes;
   },
-  getTicketsNegocio: async (_, {negocio}, { db }) => {
+  getTicketsNegocio: async (_, { negocio }, { db }) => {
     const Lavadas = await db
       .collection("TicketLavado")
-      .find({ negocio: ObjectId(negocio)})
+      .find({ negocio: ObjectId(negocio) })
       .sort({ fecha: -1 })
       .toArray();
     return Lavadas
   },
-  getTicketLavado: async (_, {id}, { db }) => {
+  getTicketLavado: async (_, { id }, { db }) => {
     const Lavada = await db
       .collection("TicketLavado")
-      .findOne({ _id: ObjectId(id)})
+      .findOne({ _id: ObjectId(id) })
     return Lavada
   },
+
+  getSearch: async (_, { text }, { db }) => {
+    const keywordsToRemove = /\b(taller|talleres|de|para|servicio)\b/gi;
+
+    const cleanedText = text.replace(keywordsToRemove, "").trim();
+
+    try {
+      const resultadoBusqueda = await db
+        .collection("NegocioVDos")
+        .aggregate([
+          {
+            $search: {
+              index: "default", // Nombre del índice en Atlas Search, asegúrate de que sea correcto
+              text: {
+                query: cleanedText, // Texto de búsqueda sin "talleres"
+                path: [
+                  "nombre",      // Campos donde quieres realizar la búsqueda
+                  "categorias",
+                  "direccion",
+                  "localidad",
+                  "servicio",
+                  "ciudad",
+                  "localidad",
+                  "tipo"
+                ]
+              }
+            }
+          },
+          {
+            $limit: 20 // Puedes ajustar este valor según la cantidad de resultados que quieras
+          }
+        ])
+        .toArray();
+
+      return resultadoBusqueda;
+    } catch (error) {
+      console.error("Error en la búsqueda: ", error);
+      throw new Error("No se pudo realizar la búsqueda");
+    }
+  }
 };
 
 module.exports = querys;
