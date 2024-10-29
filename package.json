@@ -22,6 +22,7 @@
     "express-rate-limit": "^7.1.5",
     "fetch": "1.1.0",
     "graphql": "16.6.0",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "8.5.1",
     "mongodb": "4.9.0",
     "node-fetch": "^2.6.9",

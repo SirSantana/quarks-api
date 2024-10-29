@@ -1,7 +1,6 @@
 const fetch= require("node-fetch")
 
 async function Fetching(frase, numero) {
-    console.log('frase', frase, numero);
     // PONER LA IP EN .ENV Y EN VERCEL
     const res = await fetch(`${process.env.DIRECCION_IP}/send/vendedor/`,
         {
