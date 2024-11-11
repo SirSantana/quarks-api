@@ -56,7 +56,7 @@ const start = async () => {
 
   // Configuración de CORS
   const allowedOrigins = [
-    // 'http://localhost:3000',
+    'http://localhost:3000',
     'https://www.quarks.com.co',
     'https://www.cotizatusrepuestos.com',
     'https://quarks-web-sirsantana.vercel.app',
