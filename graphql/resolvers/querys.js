@@ -356,16 +356,14 @@ const querys = {
   },
   getNegociosVDosByServicio: async (_, { tipo }, { db, }) => {
     const tipoRegex = new RegExp(tipo, 'i');
-    // const negociosVDos = await db.collection('NegocioVDos').find({tipo: tipo}).toArray()
     const negociosVDos = await db.collection('NegocioVDos').find({
       $or: [
         { tipo: tipoRegex },
         { categorias: { $regex: tipoRegex } },
         { nombre: { $regex: tipoRegex } },
         { marcasAutos: { $in: [tipoRegex] } }
-
       ]
-    }).toArray()
+    }).limit(12).toArray()
     return negociosVDos;
   },
   getStadisticsHalfMonth: async (_, { id }, { db }) => {

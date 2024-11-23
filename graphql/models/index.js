@@ -607,7 +607,8 @@ const typeDefs = gql`
   coordenadas:[Float]
   fechaCreated:Date
   indicativo:String
-  
+  lat:String
+  lng:String
  }
  input CreateVehiculeInput{
    tipo:String
