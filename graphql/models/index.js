@@ -92,6 +92,9 @@ const typeDefs = gql`
    getConsumos:[Consumo]
    verifyAccountCheck(userName:String):Boolean
 
+
+   getTermino(slug:String):Termino
+
  }
 
 
@@ -165,6 +168,7 @@ const typeDefs = gql`
 
    createConsumo(fecha:String, galon:String, consumo:String):Consumo
    createNegocioVDos(email:String, password:String, username:String):AuthNegocioVDos
+   createNegocioVDosPreview(email:String, nombre:String, whatsapp:String, indicativo:String, tipo:String, vehiculo:String):NegocioVDos
    editNegocioVDos(input:EditNegocioInput):NegocioVDos
    editNegocioVDosRedes(input:EditNegocioInputRedes):NegocioVDos
 
@@ -390,6 +394,20 @@ const typeDefs = gql`
    id:ID
    vehiculo:ID
    fecha:Date
+ }
+ type Termino{
+   id:ID
+   title:String
+   description:String
+   createdAt:Date
+   updatedAt:Date
+   image:String
+   video:String
+   content:String
+   tags:[String]
+   slug:String
+   category:String
+
  }
  type ReportePriceGasolinera{
   combustible:String

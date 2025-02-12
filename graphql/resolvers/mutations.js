@@ -827,6 +827,21 @@ const mutations = {
       token: getToken(negocio),
     };
   },
+  createNegocioVDosPreview: async (_, { email, nombre, whatsapp, indicativo, tipo, vehiculo }, { db }) => {
+    const userExists = await db.collection("NegocioVDos").findOne({
+      $or: [
+        { email: email }
+      ]
+    });
+
+    if (userExists) {
+      return new Error('Ya existe un usuario con ese correo. Prueba otro.');
+    }
+    const newInput = { email, userName: nombre.replace(/\s/g, '-').toLowerCase(), nombre: nombre, whatsapp, telefono:whatsapp, indicativo, tipo, vehiculo };
+
+    await db.collection("NegocioVDos").insertOne(newInput, );
+    return newInput;
+  },
   editNegocioVDos: async (_, { input }, { negocio, db }) => {
     let newInputImage;
     const userExists = await db.collection("NegocioVDos").findOne({

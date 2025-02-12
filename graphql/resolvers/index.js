@@ -59,6 +59,9 @@ const querys = require('./querys');
     },
     TicketLavado:{
       id: ({ _id, id }) => _id || id,
+    },
+    Termino:{
+      id: ({ _id, id }) => _id || id,
     }
   };
 
