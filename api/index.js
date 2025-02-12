@@ -53,7 +53,7 @@ const start = async () => {
   const db = client.db('quarks');
 
   const app = express();
-
+    
   // Configuración de CORS
   const allowedOrigins = [
     // 'http://localhost:3000',
