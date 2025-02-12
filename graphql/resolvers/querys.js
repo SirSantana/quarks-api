@@ -4,6 +4,7 @@ const querys = {
 
   //TERMINOS
   getTermino: async (_, { slug }, { db }) => {
+    
     const termino = await db.collection('Terminos').findOne({slug:slug})
     return termino
   },
