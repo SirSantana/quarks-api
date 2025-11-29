@@ -311,6 +311,8 @@ const typeDefs = gql`
   descripcion:String
   fecha:Date
   indicativo:String
+  timeSlot:String
+  date:String
  }
  input CreateAccion{
   tipo:String
